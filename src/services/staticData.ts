@@ -38,11 +38,11 @@ export const staticPersonalInfo: PersonalInfo = {
   profession: "Développeur Full Stack & Étudiant en Génie Logiciel",
   localisation: "Libreville, Gabon",
   description_courte: "Passionné par le développement web et la création de solutions numériques innovantes. Spécialisé en React, Node.js et technologies modernes.",
-  email_contact: "makosso.dev@gmail.com",
-  github_url: "https://github.com/makosso-dev",
-  linkedin_url: "https://linkedin.com/in/makosso-dev",
-  facebook_url: "https://facebook.com/makosso.dev",
-  photo_profil: null
+  email_contact: "mb.daniel241gmail.com",
+  github_url: "https://github.com/DanielMb24",
+  linkedin_url: "https://www.linkedin.com/in/daniel-makosso",
+  facebook_url: "https://www.facebook.com/daniel.devfullstak",
+  photo_profil: "/5.jpg"
 };
 
 export const staticProjects: Project[] = [
@@ -90,33 +90,40 @@ export const staticProjects: Project[] = [
 
 export const staticSkills: Record<string, Skill[]> = {
   "Frontend": [
-    { nom: "HTML5", niveau: 95, categorie: "Frontend", icone: "Code" },
-    { nom: "CSS3", niveau: 90, categorie: "Frontend", icone: "Palette" },
-    { nom: "JavaScript", niveau: 92, categorie: "Frontend", icone: "Code" },
-    { nom: "TypeScript", niveau: 88, categorie: "Frontend", icone: "Code" },
-    { nom: "React", niveau: 90, categorie: "Frontend", icone: "Code" },
+    { nom: "HTML5", niveau: 80, categorie: "Frontend", icone: "Code" },
+    { nom: "CSS3", niveau: 80, categorie: "Frontend", icone: "Palette" },
+    { nom: "JavaScript", niveau: 75, categorie: "Frontend", icone: "Code" },
+    { nom: "TypeScript", niveau: 75, categorie: "Frontend", icone: "Code" },
+    { nom: "React", niveau: 70, categorie: "Frontend", icone: "Code" },
     { nom: "Next.js", niveau: 85, categorie: "Frontend", icone: "Code" },
-    { nom: "TailwindCSS", niveau: 95, categorie: "Frontend", icone: "Palette" },
-    { nom: "SASS/SCSS", niveau: 80, categorie: "Frontend", icone: "Palette" }
+    { nom: "TailwindCSS", niveau: 80, categorie: "Frontend", icone: "Palette" },
+
   ],
   "Backend": [
-    { nom: "Node.js", niveau: 85, categorie: "Backend", icone: "Database" },
-    { nom: "Express.js", niveau: 82, categorie: "Backend", icone: "Database" },
-    { nom: "MySQL", niveau: 80, categorie: "Backend", icone: "Database" },
-    { nom: "PostgreSQL", niveau: 75, categorie: "Backend", icone: "Database" },
-    { nom: "Laravel", niveau: 70, categorie: "Backend", icone: "Database" },
-    { nom: "PHP", niveau: 75, categorie: "Backend", icone: "Code" },
+    { nom: "Node.js", niveau: 70, categorie: "Backend", icone: "Database" },
+    { nom: "Express.js", niveau: 70, categorie: "Backend", icone: "Database" },
+    { nom: "MySQL", niveau: 95, categorie: "Backend", icone: "Database" },
+    { nom: "PostgreSQL", niveau: 60, categorie: "Backend", icone: "Database" },
+
+    { nom: "PHP", niveau: 70, categorie: "Backend", icone: "Code" },
     { nom: "API REST", niveau: 88, categorie: "Backend", icone: "Database" }
   ],
   "Outils & Technologies": [
-    { nom: "Git/GitHub", niveau: 90, categorie: "Outils & Technologies", icone: "Settings" },
-    { nom: "VS Code", niveau: 95, categorie: "Outils & Technologies", icone: "Settings" },
-    { nom: "Docker", niveau: 70, categorie: "Outils & Technologies", icone: "Settings" },
-    { nom: "Figma", niveau: 85, categorie: "Outils & Technologies", icone: "Palette" },
+    { nom: "Git/GitHub", niveau: 80, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "VS Code", niveau: 100, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "Adobe XD", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "Figma", niveau: 75, categorie: "Outils & Technologies", icone: "Palette" },
     { nom: "Postman", niveau: 80, categorie: "Outils & Technologies", icone: "Settings" },
-    { nom: "Vercel", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" }
+    { nom: "Vercel", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" },
+        { nom: "PhpStorm", niveau: 80, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "WebStorm", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "intelliJ", niveau: 80, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "PyCharm", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" },
+
   ],
-  "Langages": [
+  "Langages Programmations": [
+    { nom: "C", niveau: 70, categorie: "Langages", icone: "Code" },
+    { nom: "C++", niveau: 70, categorie: "Langages", icone: "Code" },
     { nom: "C#", niveau: 70, categorie: "Langages", icone: "Code" },
     { nom: "Python", niveau: 65, categorie: "Langages", icone: "Code" },
     { nom: "Java", niveau: 60, categorie: "Langages", icone: "Code" }
