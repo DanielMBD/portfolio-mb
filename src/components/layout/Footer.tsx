@@ -14,9 +14,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-left">
             <p className="text-muted-foreground">
-              © 2025 Daniel MAKOSSO{" "}
+              © 2025, realisé par Daniel MAKOSSO{" "},
 
-              Realisé avec React & TypeScript
+              en utilisant React & TypeScript
             </p>
           </div>
 
