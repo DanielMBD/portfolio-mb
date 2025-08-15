@@ -14,9 +14,9 @@ const Footer = () => {
           {/* Copyright */}
           <div className="text-center md:text-left">
             <p className="text-muted-foreground">
-              © 2024 John Doe. Made with{" "}
+              © 2025 Daniel MAKOSSO{" "}
               <Heart className="inline w-4 h-4 text-red-500 fill-current" />{" "}
-              using React & TypeScript
+              Realisé avec React & TypeScript
             </p>
           </div>
 
