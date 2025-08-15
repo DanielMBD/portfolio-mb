@@ -27,7 +27,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme">
+        <ThemeProvider defaultTheme="light" storageKey="portfolio-theme">
           <TooltipProvider>
             <Router>
               <div className="min-h-screen bg-background text-foreground">

@@ -1,24 +1,28 @@
 
 import { useQuery } from '@tanstack/react-query';
-import ApiService from '@/services/api';
+import { StaticDataService } from '@/services/staticData';
+import type { PersonalInfo, Project, Skill } from '@/services/staticData';
 
 export const usePersonalInfo = () => {
   return useQuery({
     queryKey: ['personalInfo'],
-    queryFn: () => ApiService.getPersonalInfo(),
+    queryFn: StaticDataService.getPersonalInfo,
   });
 };
 
 export const useProjects = () => {
   return useQuery({
     queryKey: ['projects'],
-    queryFn: () => ApiService.getProjects(),
+    queryFn: StaticDataService.getProjects,
   });
 };
 
 export const useSkills = () => {
   return useQuery({
     queryKey: ['skills'],
-    queryFn: () => ApiService.getSkills(),
+    queryFn: StaticDataService.getSkills,
   });
 };
+
+// Types exportés pour l'utilisation dans les composants
+export type { PersonalInfo, Project, Skill };
