@@ -1,4 +1,5 @@
 
+
 export interface PersonalInfo {
   id?: number;
   nom_complet: string;
@@ -89,36 +90,36 @@ export const staticProjects: Project[] = [
 
 export const staticSkills: Record<string, Skill[]> = {
   "Frontend": [
-    { nom: "HTML5", niveau: 95, icone: "Code" },
-    { nom: "CSS3", niveau: 90, icone: "Palette" },
-    { nom: "JavaScript", niveau: 92, icone: "Code" },
-    { nom: "TypeScript", niveau: 88, icone: "Code" },
-    { nom: "React", niveau: 90, icone: "Code" },
-    { nom: "Next.js", niveau: 85, icone: "Code" },
-    { nom: "TailwindCSS", niveau: 95, icone: "Palette" },
-    { nom: "SASS/SCSS", niveau: 80, icone: "Palette" }
+    { nom: "HTML5", niveau: 95, categorie: "Frontend", icone: "Code" },
+    { nom: "CSS3", niveau: 90, categorie: "Frontend", icone: "Palette" },
+    { nom: "JavaScript", niveau: 92, categorie: "Frontend", icone: "Code" },
+    { nom: "TypeScript", niveau: 88, categorie: "Frontend", icone: "Code" },
+    { nom: "React", niveau: 90, categorie: "Frontend", icone: "Code" },
+    { nom: "Next.js", niveau: 85, categorie: "Frontend", icone: "Code" },
+    { nom: "TailwindCSS", niveau: 95, categorie: "Frontend", icone: "Palette" },
+    { nom: "SASS/SCSS", niveau: 80, categorie: "Frontend", icone: "Palette" }
   ],
   "Backend": [
-    { nom: "Node.js", niveau: 85, icone: "Database" },
-    { nom: "Express.js", niveau: 82, icone: "Database" },
-    { nom: "MySQL", niveau: 80, icone: "Database" },
-    { nom: "PostgreSQL", niveau: 75, icone: "Database" },
-    { nom: "Laravel", niveau: 70, icone: "Database" },
-    { nom: "PHP", niveau: 75, icone: "Code" },
-    { nom: "API REST", niveau: 88, icone: "Database" }
+    { nom: "Node.js", niveau: 85, categorie: "Backend", icone: "Database" },
+    { nom: "Express.js", niveau: 82, categorie: "Backend", icone: "Database" },
+    { nom: "MySQL", niveau: 80, categorie: "Backend", icone: "Database" },
+    { nom: "PostgreSQL", niveau: 75, categorie: "Backend", icone: "Database" },
+    { nom: "Laravel", niveau: 70, categorie: "Backend", icone: "Database" },
+    { nom: "PHP", niveau: 75, categorie: "Backend", icone: "Code" },
+    { nom: "API REST", niveau: 88, categorie: "Backend", icone: "Database" }
   ],
   "Outils & Technologies": [
-    { nom: "Git/GitHub", niveau: 90, icone: "Settings" },
-    { nom: "VS Code", niveau: 95, icone: "Settings" },
-    { nom: "Docker", niveau: 70, icone: "Settings" },
-    { nom: "Figma", niveau: 85, icone: "Palette" },
-    { nom: "Postman", niveau: 80, icone: "Settings" },
-    { nom: "Vercel", niveau: 85, icone: "Settings" }
+    { nom: "Git/GitHub", niveau: 90, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "VS Code", niveau: 95, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "Docker", niveau: 70, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "Figma", niveau: 85, categorie: "Outils & Technologies", icone: "Palette" },
+    { nom: "Postman", niveau: 80, categorie: "Outils & Technologies", icone: "Settings" },
+    { nom: "Vercel", niveau: 85, categorie: "Outils & Technologies", icone: "Settings" }
   ],
   "Langages": [
-    { nom: "C#", niveau: 70, icone: "Code" },
-    { nom: "Python", niveau: 65, icone: "Code" },
-    { nom: "Java", niveau: 60, icone: "Code" }
+    { nom: "C#", niveau: 70, categorie: "Langages", icone: "Code" },
+    { nom: "Python", niveau: 65, categorie: "Langages", icone: "Code" },
+    { nom: "Java", niveau: 60, categorie: "Langages", icone: "Code" }
   ]
 };
 
@@ -140,3 +141,4 @@ export class StaticDataService {
     return staticSkills;
   }
 }
+
