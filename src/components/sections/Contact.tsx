@@ -4,13 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, Facebook } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import ApiService from '@/services/api';
+import { EmailService, ContactFormData } from '@/services/emailService';
+import { staticPersonalInfo } from '@/services/staticData';
 
 const Contact = () => {
   const { toast } = useToast();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ContactFormData>({
     nom: '',
     email: '',
     message: ''
@@ -39,7 +40,9 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      await ApiService.sendContact(formData);
+      // Utilise la méthode de fallback pour le moment
+      // Remplacez par EmailService.sendContactEmail(formData) quand EmailJS sera configuré
+      await EmailService.sendContactEmailFallback(formData);
       
       toast({
         title: 'Message envoyé !',
@@ -64,13 +67,13 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4">
+    <section id="contact" className="py-20 px-4 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-4xl font-bold text-foreground mb-4">
             Contactez-moi
           </h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Une idée de projet ? Une question ? N'hésitez pas à me contacter !
           </p>
         </div>
@@ -78,51 +81,85 @@ const Contact = () => {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Informations de contact */}
           <div className="space-y-8">
-            <Card className="glass border-white/10">
+            <Card className="border-border/50 shadow-card">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-blue-500/20 p-3 rounded-lg">
-                    <Mail className="w-6 h-6 text-blue-400" />
+                  <div className="bg-primary/20 p-3 rounded-lg">
+                    <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Email</h3>
-                    <p className="text-gray-300">tonemail@example.com</p>
+                    <h3 className="text-lg font-semibold text-foreground">Email</h3>
+                    <p className="text-muted-foreground">{staticPersonalInfo.email_contact}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="glass border-white/10">
+            <Card className="border-border/50 shadow-card">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-green-500/20 p-3 rounded-lg">
-                    <Phone className="w-6 h-6 text-green-400" />
+                  <div className="bg-success/20 p-3 rounded-lg">
+                    <Phone className="w-6 h-6 text-success" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Téléphone</h3>
-                    <p className="text-gray-300">+241 XX XX XX XX</p>
+                    <h3 className="text-lg font-semibold text-foreground">Téléphone</h3>
+                    <p className="text-muted-foreground">+241 XX XX XX XX</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="glass border-white/10">
+            <Card className="border-border/50 shadow-card">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
-                  <div className="bg-purple-500/20 p-3 rounded-lg">
-                    <MapPin className="w-6 h-6 text-purple-400" />
+                  <div className="bg-secondary/20 p-3 rounded-lg">
+                    <MapPin className="w-6 h-6 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Localisation</h3>
-                    <p className="text-gray-300">Libreville, Gabon</p>
+                    <h3 className="text-lg font-semibold text-foreground">Localisation</h3>
+                    <p className="text-muted-foreground">{staticPersonalInfo.localisation}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
+
+            {/* Réseaux sociaux */}
+            <div className="flex space-x-4 justify-center lg:justify-start">
+              {staticPersonalInfo.github_url && (
+                <a 
+                  href={staticPersonalInfo.github_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <Github className="w-6 h-6 text-foreground" />
+                </a>
+              )}
+              {staticPersonalInfo.linkedin_url && (
+                <a 
+                  href={staticPersonalInfo.linkedin_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <Linkedin className="w-6 h-6 text-foreground" />
+                </a>
+              )}
+              {staticPersonalInfo.facebook_url && (
+                <a 
+                  href={staticPersonalInfo.facebook_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                >
+                  <Facebook className="w-6 h-6 text-foreground" />
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Formulaire de contact */}
-          <Card className="glass border-white/10">
+          <Card className="border-border/50 shadow-card">
             <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -132,7 +169,7 @@ const Contact = () => {
                     placeholder="Votre nom"
                     value={formData.nom}
                     onChange={handleChange}
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
+                    className="border-border/50 focus:border-primary"
                     required
                   />
                 </div>
@@ -144,7 +181,7 @@ const Contact = () => {
                     placeholder="Votre email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
+                    className="border-border/50 focus:border-primary"
                     required
                   />
                 </div>
@@ -156,14 +193,14 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleChange}
                     rows={5}
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 resize-none"
+                    className="border-border/50 focus:border-primary resize-none"
                     required
                   />
                 </div>
 
                 <Button 
                   type="submit" 
-                  className="w-full glass-button group"
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isLoading}
                 >
                   {isLoading ? (
