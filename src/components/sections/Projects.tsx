@@ -37,8 +37,8 @@ const Projects = () => {
     featured: true, // You could add a featured field to the backend
   }));
 
-  const featuredProjects = transformedProjects.slice(0, 2); // Show first 2 as featured
-  const otherProjects = transformedProjects.slice(2); // Rest as other projects
+  const featuredProjects = transformedProjects.slice(0, 3); // Show first 2 as featured
+  const otherProjects = transformedProjects.slice(0); // Rest as other projects
 
   return (
     <section id="projects" className="py-20 relative">
@@ -124,46 +124,46 @@ const Projects = () => {
         )}
 
         {/* Other Projects */}
-        {otherProjects.length > 0 && (
-          <div>
-            <h3 className="text-2xl font-semibold mb-8 text-center">Autres Projets</h3>
-            <div className="grid md:grid-cols-3 gap-6">
-              {otherProjects.map((project, index) => (
-                <Card key={project.id} className="glass hover:shadow-card transition-all duration-300 animate-fade-in" style={{ animationDelay: `${(index + 2) * 0.2}s` }}>
-                  <CardContent className="p-6">
-                    <h4 className="text-lg font-semibold mb-2">{project.title}</h4>
-                    <p className="text-muted-foreground mb-4 text-sm line-clamp-3">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {project.technologies.slice(0, 3).map((tech) => (
-                        <Badge key={tech} variant="secondary" className="text-xs">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                    <div className="flex gap-2">
-                      {project.githubUrl && (
-                        <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>
-                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                            <Github size={14} />
-                          </a>
-                        </ButtonVariants>
-                      )}
-                      {project.liveUrl && (
-                        <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>
-                          <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                            <ExternalLink size={14} />
-                          </a>
-                        </ButtonVariants>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
+        {/*{otherProjects.length > 0 && (*/}
+        {/*  <div>*/}
+        {/*    <h3 className="text-2xl font-semibold mb-8 text-center">Autres Projets</h3>*/}
+        {/*    <div className="grid md:grid-cols-3 gap-6">*/}
+        {/*      {otherProjects.map((project, index) => (*/}
+        {/*        <Card key={project.id} className="glass hover:shadow-card transition-all duration-300 animate-fade-in" style={{ animationDelay: `${(index + 2) * 0.2}s` }}>*/}
+        {/*          <CardContent className="p-6">*/}
+        {/*            <h4 className="text-lg font-semibold mb-2">{project.title}</h4>*/}
+        {/*            <p className="text-muted-foreground mb-4 text-sm line-clamp-3">*/}
+        {/*              {project.description}*/}
+        {/*            </p>*/}
+        {/*            <div className="flex flex-wrap gap-1 mb-4">*/}
+        {/*              {project.technologies.slice(0, 3).map((tech) => (*/}
+        {/*                <Badge key={tech} variant="secondary" className="text-xs">*/}
+        {/*                  {tech}*/}
+        {/*                </Badge>*/}
+        {/*              ))}*/}
+        {/*            </div>*/}
+        {/*            <div className="flex gap-2">*/}
+        {/*              {project.githubUrl && (*/}
+        {/*                <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>*/}
+        {/*                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">*/}
+        {/*                    <Github size={14} />*/}
+        {/*                  </a>*/}
+        {/*                </ButtonVariants>*/}
+        {/*              )}*/}
+        {/*              {project.liveUrl && (*/}
+        {/*                <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>*/}
+        {/*                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">*/}
+        {/*                    <ExternalLink size={14} />*/}
+        {/*                  </a>*/}
+        {/*                </ButtonVariants>*/}
+        {/*              )}*/}
+        {/*            </div>*/}
+        {/*          </CardContent>*/}
+        {/*        </Card>*/}
+        {/*      ))}*/}
+        {/*    </div>*/}
+        {/*  </div>*/}
+        {/*)}*/}
 
         {transformedProjects.length === 0 && (
           <div className="text-center py-12">
