@@ -24,7 +24,7 @@ const Projects = () => {
     console.error('Erreur lors du chargement des projets:', error);
   }
 
-  // Transform backend data to match frontend expectations
+
   const transformedProjects = projects.map(project => ({
     id: project.id!,
     title: project.titre,

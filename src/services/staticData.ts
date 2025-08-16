@@ -48,12 +48,12 @@ export const staticPersonalInfo: PersonalInfo = {
 export const staticProjects: Project[] = [
   {
     id: 1,
-    titre: "Système numérique de dépôt et suivi des candidatures aux concours gabonais",
-    description: "Plateforme complète permettant aux candidats de déposer leurs candidatures en ligne et de suivre l'état de leur dossier en temps réel. Interface intuitive avec tableau de bord personnalisé.",
-    technologies: ["React", "TypeScript", "Node.js", "MySQL", "Express.js", "TailwindCSS"],
+    titre: "Porfolio professionnel",
+    description: "Porfolio professionnel, presente les projets, les technologies etc",
+    technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "/placeholder.svg",
     github_url: "https://github.com/makosso-dev/concours-gabon",
-    demo_url: "https://concours-gabon-demo.vercel.app",
+    demo_url: "https://web-profile-pro-08.vercel.app/",
     statut: "actif"
   },
   {
