@@ -51,7 +51,7 @@ export const staticProjects: Project[] = [
     titre: "Porfolio professionnel",
     description: "Porfolio professionnel, presente les projets, les technologies etc",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
-    image_url: "",
+    image_url: "../../cpe_my_md.png",
     github_url: "https://github.com/DanielMb24/web-profile-pro-08",
     demo_url: "https://web-profile-pro-08.vercel.app/",
     statut: "actif"
@@ -62,7 +62,7 @@ export const staticProjects: Project[] = [
     description: "",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "",
-    github_url: "https://github.com/DanielMb24/my_Task/",
+    github_url: "https://github.com/DanielMb24/my_Task",
     demo_url: "https://my-tf.vercel.app/",
     statut: "actif"
   },
@@ -76,16 +76,16 @@ export const staticProjects: Project[] = [
     demo_url: "https://my-md.vercel.app/",
     statut: "actif"
   },
-  {
-    id: 4,
-    titre: "E-commerce Platform",
-    description: "Plateforme e-commerce moderne avec panier d'achat, système de paiement intégré et gestion des commandes. Interface administrateur complète.",
-    technologies: ["Next.js", "Stripe", "Prisma", "PostgreSQL", "Vercel"],
-    image_url: "/placeholder.svg",
-    github_url: "https://github.com/makosso-dev/ecommerce-platform",
-    demo_url: "https://ecommerce-demo.vercel.app",
-    statut: "actif"
-  }
+  // {
+  //   id: 4,
+  //   titre: "E-commerce Platform",
+  //   description: "Plateforme e-commerce moderne avec panier d'achat, système de paiement intégré et gestion des commandes. Interface administrateur complète.",
+  //   technologies: ["Next.js", "Stripe", "Prisma", "PostgreSQL", "Vercel"],
+  //   image_url: "/placeholder.svg",
+  //   github_url: "https://github.com/makosso-dev/ecommerce-platform",
+  //   demo_url: "https://ecommerce-demo.vercel.app",
+  //   statut: "actif"
+  // }
 ];
 
 export const staticSkills: Record<string, Skill[]> = {
