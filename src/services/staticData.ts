@@ -59,7 +59,7 @@ export const staticProjects: Project[] = [
   {
     id: 2,
     titre: "Application de gestion des taches",
-    description: "",
+    description: "Application de gestion de tâches inspirée de Trello, conçue avec React, TailwindCSS. Elle permet d’ajouter, modifier, supprimer et organiser les tâches dans trois colonnes (\"À faire\", \"En cours\", \"Terminé\"). La recherche par mots-clés, le dark mode et la sauvegarde automatique via localStorage assurent une expérience utilisateur complète et professionnelle.",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "/cpe_my_tf.png",
     github_url: "https://github.com/DanielMb24/my_Task",
@@ -69,7 +69,7 @@ export const staticProjects: Project[] = [
   {
     id: 3,
     titre: "Application de gestion de modules",
-    description: ".",
+    description: "Application web interactive développée avec React, TailwindCSS et Chart.js, permettant aux utilisateurs de suivre la progression de leurs modules de formation. Elle offre un tableau de bord moderne avec cartes de modules, gestion de progression en temps réel, visualisation par graphique circulaire et persistance via localStorage. L’interface est responsive, intuitive et propose un mode sombre.",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "/cpe_my_md.png",
     github_url: "https://github.com/DanielMb24/mes-modules",
