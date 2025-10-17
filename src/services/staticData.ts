@@ -39,7 +39,7 @@ export const staticPersonalInfo: PersonalInfo = {
   localisation: "Libreville, Gabon",
   description_courte: "Passionné par le développement web et la création de solutions numériques innovantes. Spécialisé en React, Node.js et technologies modernes.",
   email_contact: "mb.daniel241gmail.com",
-  github_url: "https://github.com/DanielMb24",
+  github_url: "https://github.com/DanielMBD",
   linkedin_url: "https://www.linkedin.com/in/daniel-makosso",
   facebook_url: "https://www.facebook.com/daniel.devfullstak",
   photo_profil: "/5.jpg"
@@ -50,9 +50,9 @@ export const staticProjects: Project[] = [
     id: 1,
     titre: "Porfolio professionnel",
     description: "Porfolio professionnel, presente les projets, les technologies etc",
-    technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
+    technologies: ["React", "TypeScript", "TailwindCSS"],
     image_url: "/cpe_pf.png",
-    github_url: "https://github.com/DanielMb24/web-profile-pro-08",
+    // github_url: "https://github.com/DanielMb24/web-profile-pro-08",
     demo_url: "https://web-profile-pro-08.vercel.app/",
     statut: "actif"
   },
@@ -62,7 +62,7 @@ export const staticProjects: Project[] = [
     description: "Application de gestion de tâches inspirée de Trello, conçue avec React, TailwindCSS. Elle permet d’ajouter, modifier, supprimer et organiser les tâches dans trois colonnes (\"À faire\", \"En cours\", \"Terminé\"). La recherche par mots-clés, le dark mode et la sauvegarde automatique via localStorage assurent une expérience utilisateur complète et professionnelle.",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "/cpe_my_tf.png",
-    github_url: "https://github.com/DanielMb24/my_Task",
+    // github_url: "https://github.com/DanielMb24/my_Task",
     demo_url: "https://my-tf.vercel.app/",
     statut: "actif"
   },
@@ -72,7 +72,7 @@ export const staticProjects: Project[] = [
     description: "Application web interactive développée avec React, TailwindCSS et Chart.js, permettant aux utilisateurs de suivre la progression de leurs modules de formation. Elle offre un tableau de bord moderne avec cartes de modules, gestion de progression en temps réel, visualisation par graphique circulaire et persistance via localStorage. L’interface est responsive, intuitive et propose un mode sombre.",
     technologies: ["React", "TypeScript", "Node.js", "TailwindCSS"],
     image_url: "/cpe_my_md.png",
-    github_url: "https://github.com/DanielMb24/mes-modules",
+    // github_url: "https://github.com/DanielMb24/mes-modules",
     demo_url: "https://my-md.vercel.app/",
     statut: "actif"
   },

@@ -42,8 +42,9 @@ const Contact = () => {
     try {
       // Utilise la méthode de fallback pour le moment
       // Remplacez par EmailService.sendContactEmail(formData) quand EmailJS sera configuré
-      await EmailService.sendContactEmailFallback(formData);
-      
+      await EmailService.sendContactEmail(formData);
+
+
       toast({
         title: 'Message envoyé !',
         description: 'Votre message a été envoyé avec succès. Je vous répondrai bientôt.',
