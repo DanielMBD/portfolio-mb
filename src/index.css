@@ -172,25 +172,26 @@
 }
 
 @layer utilities {
-  /* Effet de verre (glassmorphism) */
+  /* Effet de verre (glassmorphism) moderne */
   .glass {
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/20 dark:border-gray-800/50;
-    box-shadow: var(--shadow-glass);
+    @apply bg-card/50 backdrop-blur-xl border border-border/50;
+    box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.08);
   }
 
-  /* Carte moderne */
+  /* Carte moderne avec hover élégant */
   .card-modern {
-    @apply bg-card rounded-xl border border-border/50 shadow-card transition-all duration-300;
+    @apply bg-card rounded-xl border border-border/50 transition-all duration-300;
   }
 
   .card-modern:hover {
-    @apply shadow-xl border-primary/30 translate-y-[-4px];
+    @apply border-primary/50 translate-y-[-2px];
+    box-shadow: 0 12px 40px -4px rgba(0, 0, 0, 0.12);
   }
 
   /* Bouton avec gradient */
   .btn-gradient {
     @apply bg-gradient-to-r from-primary to-secondary text-white font-medium px-6 py-3 rounded-lg;
-    @apply transition-all duration-300 hover:shadow-button hover:scale-105;
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02];
   }
 
   /* Texte avec gradient */
@@ -205,7 +206,7 @@
 
   .section-bg::before {
     content: "";
-    @apply absolute inset-0 bg-gradient-hero opacity-50;
+    @apply absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5;
   }
 
   /* Animation de fade-in au scroll */
@@ -226,7 +227,7 @@
   /* Input moderne */
   .input-modern {
     @apply w-full px-4 py-3 rounded-lg border border-border bg-background;
-    @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
     @apply transition-all duration-200;
   }
 
@@ -241,6 +242,23 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-primary/50 rounded-full hover:bg-primary/70;
+  }
+
+  /* Animation fade-in */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+    opacity: 0;
   }
 }
 

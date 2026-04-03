@@ -92,164 +92,215 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-muted/30">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            Contactez-moi
+    <section id="contact" className="py-20 relative overflow-hidden">
+      {/* Background décoratif */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/20 to-background" />
+      <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-20 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-block">
+            <span className="text-sm font-semibold text-primary uppercase tracking-wider">
+              Contact
+            </span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">
+            Travaillons{" "}
+            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Ensemble
+            </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Une idée de projet ? Une question ? N'hésitez pas à me contacter !
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Un projet en tête ? Une question ? Je suis à votre écoute
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Informations de contact */}
-          <div className="space-y-8">
-            <Card className="border-border/50 shadow-card">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-primary/20 p-3 rounded-lg">
-                    <Mail className="w-6 h-6 text-primary" />
+        <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+          {/* Informations de contact - 2 colonnes */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Cards d'info */}
+            <div className="space-y-4">
+              <Card className="border-border/50 hover:border-primary/50 transition-all bg-card/50 backdrop-blur">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
+                      <Mail className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-semibold mb-1">Email</h3>
+                      <a
+                        href={`mailto:${staticPersonalInfo.email_contact}`}
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors break-all"
+                      >
+                        {staticPersonalInfo.email_contact}
+                      </a>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Email
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {staticPersonalInfo.email_contact}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card className="border-border/50 shadow-card">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-success/20 p-3 rounded-lg">
-                    <Phone className="w-6 h-6 text-success" />
+              <Card className="border-border/50 hover:border-primary/50 transition-all bg-card/50 backdrop-blur">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-secondary/10 border border-secondary/20">
+                      <Phone className="w-5 h-5 text-secondary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-1">Téléphone</h3>
+                      <a
+                        href="tel:+24174604327"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        +241 74604327
+                      </a>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Téléphone
-                    </h3>
-                    <p className="text-muted-foreground">+241 74604327</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
 
-            <Card className="border-border/50 shadow-card">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="bg-secondary/20 p-3 rounded-lg">
-                    <MapPin className="w-6 h-6 text-secondary" />
+              <Card className="border-border/50 hover:border-primary/50 transition-all bg-card/50 backdrop-blur">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
+                      <MapPin className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold mb-1">Localisation</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {staticPersonalInfo.localisation}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Localisation
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {staticPersonalInfo.localisation}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Réseaux sociaux */}
-            <div className="flex space-x-4 justify-center lg:justify-start">
-              {staticPersonalInfo.github_url && (
-                <a
-                  href={staticPersonalInfo.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <Github className="w-6 h-6 text-foreground" />
-                </a>
-              )}
-              {staticPersonalInfo.linkedin_url && (
-                <a
-                  href={staticPersonalInfo.linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <Linkedin className="w-6 h-6 text-foreground" />
-                </a>
-              )}
-              {staticPersonalInfo.facebook_url && (
-                <a
-                  href={staticPersonalInfo.facebook_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
-                >
-                  <Facebook className="w-6 h-6 text-foreground" />
-                </a>
-              )}
+            <div className="pt-4">
+              <h3 className="font-semibold mb-4">Retrouvez-moi sur</h3>
+              <div className="flex gap-3">
+                {staticPersonalInfo.github_url && (
+                  <a
+                    href={staticPersonalInfo.github_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
+                    aria-label="GitHub"
+                  >
+                    <Github className="w-5 h-5" />
+                  </a>
+                )}
+                {staticPersonalInfo.linkedin_url && (
+                  <a
+                    href={staticPersonalInfo.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin className="w-5 h-5" />
+                  </a>
+                )}
+                {staticPersonalInfo.facebook_url && (
+                  <a
+                    href={staticPersonalInfo.facebook_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
+                    aria-label="Facebook"
+                  >
+                    <Facebook className="w-5 h-5" />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Formulaire de contact */}
-          <Card className="border-border/50 shadow-card">
-            <CardContent className="p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <Input
-                    type="text"
-                    name="nom"
-                    placeholder="Votre nom"
-                    value={formData.nom}
-                    onChange={handleChange}
-                    className="border-border/50 focus:border-primary"
-                    required
-                  />
-                </div>
+          {/* Formulaire de contact - 3 colonnes */}
+          <div className="lg:col-span-3">
+            <Card className="border-border/50 bg-card/50 backdrop-blur">
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="nom"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      Nom complet
+                    </label>
+                    <Input
+                      id="nom"
+                      type="text"
+                      name="nom"
+                      placeholder="Votre nom"
+                      value={formData.nom}
+                      onChange={handleChange}
+                      className="border-border/50 focus:border-primary bg-background"
+                      required
+                    />
+                  </div>
 
-                <div>
-                  <Input
-                    type="email"
-                    name="email"
-                    placeholder="Votre email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border-border/50 focus:border-primary"
-                    required
-                  />
-                </div>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      name="email"
+                      placeholder="votre@email.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="border-border/50 focus:border-primary bg-background"
+                      required
+                    />
+                  </div>
 
-                <div>
-                  <Textarea
-                    name="message"
-                    placeholder="Votre message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    rows={5}
-                    className="border-border/50 focus:border-primary resize-none"
-                    required
-                  />
-                </div>
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium mb-2"
+                    >
+                      Message
+                    </label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      placeholder="Décrivez votre projet ou votre question..."
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={6}
+                      className="border-border/50 focus:border-primary resize-none bg-background"
+                      required
+                    />
+                  </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    "Envoi en cours..."
-                  ) : (
-                    <>
-                      Envoyer le message
-                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                    </>
-                  )}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                  <Button
+                    type="submit"
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-base font-medium group"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                        Envoi en cours...
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        Envoyer le message
+                        <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      </span>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </section>

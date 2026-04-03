@@ -86,3 +86,5 @@ scripts/setup.bat
 scripts/setup.sh
 scripts/start-dev.bat
 scripts/start-dev.sh
+backend/.env
+backend/.env
