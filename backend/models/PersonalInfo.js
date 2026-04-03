@@ -1,86 +1,76 @@
+const mongoose = require("mongoose");
 
-const db = require('../config/database');
+const personalInfoSchema = new mongoose.Schema(
+  {
+    nom_complet: {
+      type: String,
+      required: true,
+    },
+    profession: {
+      type: String,
+      required: true,
+    },
+    localisation: {
+      type: String,
+      required: true,
+    },
+    description_courte: {
+      type: String,
+      required: true,
+    },
+    photo_profil: {
+      type: String,
+      default: null,
+    },
+    email_contact: {
+      type: String,
+      required: true,
+    },
+    github_url: {
+      type: String,
+      default: null,
+    },
+    linkedin_url: {
+      type: String,
+      default: null,
+    },
+    facebook_url: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-class PersonalInfo {
-  // Récupérer les informations personnelles
-  static async get() {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM personal_info ORDER BY id DESC LIMIT 1'
-      );
-      return rows[0] || null;
-    } catch (error) {
-      throw error;
-    }
+// Méthode statique pour obtenir ou créer les informations personnelles
+personalInfoSchema.statics.getOrCreate = async function () {
+  let info = await this.findOne();
+  if (!info) {
+    info = await this.create({
+      nom_complet: "Mr MAKOSSO",
+      profession: "Étudiant en Génie Logiciel",
+      localisation: "Libreville, Gabon",
+      description_courte:
+        "Passionné par le développement web et les nouvelles technologies",
+      email_contact: "contact@makosso-portfolio.com",
+    });
   }
+  return info;
+};
 
-  // Mettre à jour les informations personnelles
-  static async update(data) {
-    const {
-      nom_complet,
-      profession,
-      localisation,
-      description_courte,
-      photo_profil,
-      email_contact,
-      github_url,
-      linkedin_url,
-      facebook_url
-    } = data;
-
-    try {
-      // Vérifier s'il existe déjà un enregistrement
-      const existing = await this.get();
-      
-      if (existing) {
-        // Mise à jour - convertir undefined en null
-        const [result] = await db.execute(
-          `UPDATE personal_info SET 
-           nom_complet = ?, profession = ?, localisation = ?, 
-           description_courte = ?, photo_profil = ?, email_contact = ?,
-           github_url = ?, linkedin_url = ?, facebook_url = ?, 
-           updated_at = NOW()
-           WHERE id = ?`,
-          [
-            nom_complet,
-            profession,
-            localisation,
-            description_courte,
-            photo_profil || null,
-            email_contact,
-            github_url || null,
-            linkedin_url || null,
-            facebook_url || null,
-            existing.id
-          ]
-        );
-        return { id: existing.id, ...data };
-      } else {
-        // Création - convertir undefined en null
-        const [result] = await db.execute(
-          `INSERT INTO personal_info 
-           (nom_complet, profession, localisation, description_courte, 
-            photo_profil, email_contact, github_url, linkedin_url, 
-            facebook_url, created_at, updated_at) 
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
-          [
-            nom_complet,
-            profession,
-            localisation,
-            description_courte,
-            photo_profil || null,
-            email_contact,
-            github_url || null,
-            linkedin_url || null,
-            facebook_url || null
-          ]
-        );
-        return { id: result.insertId, ...data };
-      }
-    } catch (error) {
-      throw error;
-    }
+// Méthode statique pour mettre à jour les informations
+personalInfoSchema.statics.updateInfo = async function (data) {
+  let info = await this.findOne();
+  if (info) {
+    Object.assign(info, data);
+    return await info.save();
+  } else {
+    return await this.create(data);
   }
-}
+};
+
+const PersonalInfo = mongoose.model("PersonalInfo", personalInfoSchema);
 
 module.exports = PersonalInfo;

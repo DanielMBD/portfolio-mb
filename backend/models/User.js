@@ -1,57 +1,66 @@
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const db = require('../config/database');
-const bcrypt = require('bcryptjs');
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    nom: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "super_admin"],
+      default: "admin",
+    },
+    last_login: {
+      type: Date,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-class User {
-  // Créer un nouvel utilisateur admin
-  static async create(userData) {
-    const { email, password, nom, role = 'admin' } = userData;
-    
-    try {
-      // Hasher le mot de passe
-      const saltRounds = 12;
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      
-      const [result] = await db.execute(
-        'INSERT INTO users (email, password, nom, role, created_at) VALUES (?, ?, ?, ?, NOW())',
-        [email, hashedPassword, nom, role]
-      );
-      
-      return { id: result.insertId, email, nom, role };
-    } catch (error) {
-      throw error;
-    }
+// Hasher le mot de passe avant de sauvegarder
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(12);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
   }
+});
 
-  // Trouver un utilisateur par email
-  static async findByEmail(email) {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM users WHERE email = ?',
-        [email]
-      );
-      return rows[0] || null;
-    } catch (error) {
-      throw error;
-    }
-  }
+// Méthode pour vérifier le mot de passe
+userSchema.methods.verifyPassword = async function (plainPassword) {
+  return await bcrypt.compare(plainPassword, this.password);
+};
 
-  // Vérifier le mot de passe
-  static async verifyPassword(plainPassword, hashedPassword) {
-    return await bcrypt.compare(plainPassword, hashedPassword);
-  }
+// Méthode pour mettre à jour le dernier login
+userSchema.methods.updateLastLogin = async function () {
+  this.last_login = new Date();
+  return await this.save();
+};
 
-  // Mettre à jour le dernier login
-  static async updateLastLogin(userId) {
-    try {
-      await db.execute(
-        'UPDATE users SET last_login = NOW() WHERE id = ?',
-        [userId]
-      );
-    } catch (error) {
-      throw error;
-    }
-  }
-}
+// Méthode statique pour trouver par email
+userSchema.statics.findByEmail = function (email) {
+  return this.findOne({ email: email.toLowerCase() });
+};
+
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

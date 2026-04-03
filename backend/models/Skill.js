@@ -1,90 +1,51 @@
+const mongoose = require("mongoose");
 
-const db = require('../config/database');
+const skillSchema = new mongoose.Schema(
+  {
+    nom: {
+      type: String,
+      required: true,
+    },
+    niveau: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 100,
+    },
+    categorie: {
+      type: String,
+      required: true,
+      enum: ["Frontend", "Backend", "Outils", "Autres"],
+    },
+    icone: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-class Skill {
-  // Créer une nouvelle compétence
-  static async create(skillData) {
-    const { nom, niveau, categorie, icone } = skillData;
+// Index pour améliorer les performances
+skillSchema.index({ categorie: 1, niveau: -1 });
 
-    try {
-      const [result] = await db.execute(
-        `INSERT INTO skills (nom, niveau, categorie, icone, created_at, updated_at)
-         VALUES (?, ?, ?, ?, NOW(), NOW())`,
-        [nom, niveau, categorie, icone || null]
-      );
+// Méthode statique pour obtenir les compétences groupées par catégorie
+skillSchema.statics.getByCategory = async function () {
+  const skills = await this.find().sort({ categorie: 1, niveau: -1 });
 
-      return { id: result.insertId, ...skillData };
-    } catch (error) {
-      throw error;
+  // Grouper par catégorie
+  const skillsByCategory = skills.reduce((acc, skill) => {
+    if (!acc[skill.categorie]) {
+      acc[skill.categorie] = [];
     }
-  }
+    acc[skill.categorie].push(skill);
+    return acc;
+  }, {});
 
-  // Récupérer toutes les compétences groupées par catégorie
-  static async getAll() {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM skills ORDER BY categorie, niveau DESC'
-      );
+  return skillsByCategory;
+};
 
-      // Grouper par catégorie
-      const skillsByCategory = rows.reduce((acc, skill) => {
-        if (!acc[skill.categorie]) {
-          acc[skill.categorie] = [];
-        }
-        acc[skill.categorie].push(skill);
-        return acc;
-      }, {});
-
-      return skillsByCategory;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Récupérer une compétence par ID
-  static async getById(id) {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM skills WHERE id = ?',
-        [id]
-      );
-      return rows[0] || null;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Mettre à jour une compétence
-  static async update(id, skillData) {
-    const { nom, niveau, categorie, icone } = skillData;
-
-    try {
-      const [result] = await db.execute(
-        `UPDATE skills SET 
-         nom = ?, niveau = ?, categorie = ?, icone = ?, updated_at = NOW()
-         WHERE id = ?`,
-        [nom, niveau, categorie, icone || null, id]
-      );
-
-      return result.affectedRows > 0;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Supprimer une compétence
-  static async delete(id) {
-    try {
-      const [result] = await db.execute(
-        'DELETE FROM skills WHERE id = ?',
-        [id]
-      );
-
-      return result.affectedRows > 0;
-    } catch (error) {
-      throw error;
-    }
-  }
-}
+const Skill = mongoose.model("Skill", skillSchema);
 
 module.exports = Skill;

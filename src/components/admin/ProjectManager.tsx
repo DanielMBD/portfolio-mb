@@ -1,14 +1,19 @@
-
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Plus, Edit, Trash2, ExternalLink, Github } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import ApiService, { Project } from '@/services/api';
-import ProjectForm from './ProjectForm';
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Plus, Edit, Trash2, ExternalLink, Github } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import ApiService, { Project } from "@/services/api";
+import ProjectForm from "./ProjectForm";
 
 const ProjectManager = () => {
   const { toast } = useToast();
@@ -17,24 +22,24 @@ const ProjectManager = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { data: projects = [], isLoading } = useQuery({
-    queryKey: ['admin-projects'],
+    queryKey: ["admin-projects"],
     queryFn: () => ApiService.getAllProjects(),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: number) => ApiService.deleteProject(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-projects'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-projects"] });
       toast({
-        title: 'Succès',
-        description: 'Projet supprimé avec succès',
+        title: "Succès",
+        description: "Projet supprimé avec succès",
       });
     },
     onError: () => {
       toast({
-        title: 'Erreur',
-        description: 'Erreur lors de la suppression',
-        variant: 'destructive',
+        title: "Erreur",
+        description: "Erreur lors de la suppression",
+        variant: "destructive",
       });
     },
   });
@@ -50,7 +55,7 @@ const ProjectManager = () => {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce projet ?')) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce projet ?")) {
       deleteMutation.mutate(id);
     }
   };
@@ -68,12 +73,14 @@ const ProjectManager = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold gradient-text">Gestion des projets</h1>
+          <h1 className="text-3xl font-bold gradient-text">
+            Gestion des projets
+          </h1>
           <p className="text-muted-foreground mt-2">
             Gérez vos projets de portfolio
           </p>
         </div>
-        
+
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button onClick={handleAdd}>
@@ -84,7 +91,7 @@ const ProjectManager = () => {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {selectedProject ? 'Modifier le projet' : 'Nouveau projet'}
+                {selectedProject ? "Modifier le projet" : "Nouveau projet"}
               </DialogTitle>
             </DialogHeader>
             <ProjectForm
@@ -97,16 +104,25 @@ const ProjectManager = () => {
 
       <div className="grid gap-6">
         {projects.map((project) => (
-          <Card key={project.id} className="glass">
+          <Card key={project._id} className="glass">
             <CardHeader>
               <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    {project.titre}
-                    <Badge variant={project.statut === 'actif' ? 'default' : 'secondary'}>
-                      {project.statut}
-                    </Badge>
-                  </CardTitle>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CardTitle className="flex items-center gap-2">
+                      {project.titre}
+                      <Badge
+                        variant={
+                          project.statut === "actif" ? "default" : "secondary"
+                        }
+                      >
+                        {project.statut}
+                      </Badge>
+                    </CardTitle>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    ID: {project._id}
+                  </p>
                   <p className="text-muted-foreground mt-2">
                     {project.description}
                   </p>
@@ -122,7 +138,7 @@ const ProjectManager = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleDelete(project.id!)}
+                    onClick={() => handleDelete(project._id!)}
                     className="text-destructive hover:text-destructive"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -132,6 +148,16 @@ const ProjectManager = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
+                {project.image_url && (
+                  <div className="w-full h-48 rounded-lg overflow-hidden">
+                    <img
+                      src={project.image_url}
+                      alt={project.titre}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech) => (
                     <Badge key={tech} variant="outline" className="text-xs">
@@ -139,12 +165,16 @@ const ProjectManager = () => {
                     </Badge>
                   ))}
                 </div>
-                
+
                 {(project.github_url || project.demo_url) && (
                   <div className="flex gap-2">
                     {project.github_url && (
                       <Button variant="outline" size="sm" asChild>
-                        <a href={project.github_url} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={project.github_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Github className="w-4 h-4 mr-1" />
                           GitHub
                         </a>
@@ -152,7 +182,11 @@ const ProjectManager = () => {
                     )}
                     {project.demo_url && (
                       <Button variant="outline" size="sm" asChild>
-                        <a href={project.demo_url} target="_blank" rel="noopener noreferrer">
+                        <a
+                          href={project.demo_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <ExternalLink className="w-4 h-4 mr-1" />
                           Demo
                         </a>

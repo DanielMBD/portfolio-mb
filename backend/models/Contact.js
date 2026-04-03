@@ -1,90 +1,53 @@
+const mongoose = require("mongoose");
 
-const db = require('../config/database');
+const contactSchema = new mongoose.Schema(
+  {
+    nom: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    message: {
+      type: String,
+      required: true,
+    },
+    ip_address: {
+      type: String,
+      default: null,
+    },
+    is_read: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
 
-class Contact {
-  // Créer un nouveau message de contact
-  static async create(contactData) {
-    const { nom, email, message, ip_address } = contactData;
+// Index pour améliorer les performances
+contactSchema.index({ createdAt: -1 });
+contactSchema.index({ is_read: 1 });
 
-    try {
-      const [result] = await db.execute(
-        `INSERT INTO contacts (nom, email, message, ip_address, created_at)
-         VALUES (?, ?, ?, ?, NOW())`,
-        [nom, email, message, ip_address]
-      );
+// Méthode statique pour obtenir le nombre de messages non lus
+contactSchema.statics.getUnreadCount = function () {
+  return this.countDocuments({ is_read: false });
+};
 
-      return { id: result.insertId, ...contactData };
-    } catch (error) {
-      throw error;
-    }
-  }
+// Méthode statique pour obtenir tous les messages avec pagination
+contactSchema.statics.getAllPaginated = function (limit = 50, skip = 0) {
+  return this.find().sort({ createdAt: -1 }).limit(limit).skip(skip);
+};
 
-  // Récupérer tous les messages
-  static async getAll(limit = 50, offset = 0) {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM contacts ORDER BY created_at DESC LIMIT ? OFFSET ?',
-        [limit, offset]
-      );
+// Méthode pour marquer comme lu
+contactSchema.methods.markAsRead = async function () {
+  this.is_read = true;
+  return await this.save();
+};
 
-      return rows;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Récupérer un message par ID
-  static async getById(id) {
-    try {
-      const [rows] = await db.execute(
-        'SELECT * FROM contacts WHERE id = ?',
-        [id]
-      );
-      return rows[0] || null;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Marquer un message comme lu
-  static async markAsRead(id) {
-    try {
-      const [result] = await db.execute(
-        'UPDATE contacts SET is_read = 1 WHERE id = ?',
-        [id]
-      );
-
-      return result.affectedRows > 0;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Supprimer un message
-  static async delete(id) {
-    try {
-      const [result] = await db.execute(
-        'DELETE FROM contacts WHERE id = ?',
-        [id]
-      );
-
-      return result.affectedRows > 0;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  // Obtenir le nombre de messages non lus
-  static async getUnreadCount() {
-    try {
-      const [rows] = await db.execute(
-        'SELECT COUNT(*) as count FROM contacts WHERE is_read = 0'
-      );
-      return rows[0].count;
-    } catch (error) {
-      throw error;
-    }
-  }
-}
+const Contact = mongoose.model("Contact", contactSchema);
 
 module.exports = Contact;

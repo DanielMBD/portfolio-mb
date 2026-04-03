@@ -1,251 +1,184 @@
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const mysql = require('mysql2/promise');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
+// Importer les modèles
+const User = require("../models/User");
+const PersonalInfo = require("../models/PersonalInfo");
+const Project = require("../models/Project");
+const Skill = require("../models/Skill");
+const Contact = require("../models/Contact");
 
-// Script d'initialisation de la base de données
-async function initializeDatabase() {
-  let connection;
-  
+// Configuration de la connexion
+const mongoURI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/portfolio_makosso";
+
+async function initDatabase() {
   try {
-    console.log('🔄 Initialisation de la base de données...');
-    
-    // Connexion sans spécifier la base (pour la créer)
-    connection = await mysql.createConnection({
-      host: process.env.DB_HOST || 'localhost',
-      port: process.env.DB_PORT || 3306,
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || ''
+    console.log("🔄 Connexion à MongoDB...");
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
+    console.log("✅ Connecté à MongoDB");
 
-    // Créer la base de données
-    const dbName = process.env.DB_NAME || 'portfolio_makosso';
-    await connection.execute(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
-    await connection.execute(`USE \`${dbName}\``);
-    
-    console.log(`✅ Base de données "${dbName}" créée/sélectionnée`);
+    // Supprimer les données existantes (optionnel - commentez si vous voulez garder les données)
+    console.log("🗑️  Nettoyage des collections...");
+    await User.deleteMany({});
+    await PersonalInfo.deleteMany({});
+    await Project.deleteMany({});
+    await Skill.deleteMany({});
+    await Contact.deleteMany({});
+    console.log("✅ Collections nettoyées");
 
-    // Créer la table users
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
-        nom VARCHAR(255) NOT NULL,
-        role ENUM('admin', 'user') DEFAULT 'admin',
-        last_login TIMESTAMP NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_email (email)
-      )
-    `);
+    // 1. Créer l'utilisateur admin
+    console.log("👤 Création de l'utilisateur admin...");
+    const adminEmail = process.env.ADMIN_EMAIL || "admin@makosso-portfolio.com";
+    const adminPassword = process.env.ADMIN_PASSWORD || "AdminSecure123!";
 
-    // Créer la table personal_info
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS personal_info (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nom_complet VARCHAR(255) NOT NULL,
-        profession VARCHAR(255) NOT NULL,
-        localisation VARCHAR(255),
-        description_courte TEXT,
-        photo_profil VARCHAR(500),
-        email_contact VARCHAR(255),
-        github_url VARCHAR(500),
-        linkedin_url VARCHAR(500),
-        facebook_url VARCHAR(500),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      )
-    `);
+    const admin = await User.create({
+      email: adminEmail,
+      password: adminPassword,
+      nom: "Mr MAKOSSO",
+      role: "admin",
+    });
+    console.log(`✅ Utilisateur admin créé: ${admin.email}`);
 
-    // Créer la table projects
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS projects (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        titre VARCHAR(255) NOT NULL,
-        description TEXT NOT NULL,
-        technologies JSON,
-        image_url VARCHAR(500),
-        github_url VARCHAR(500),
-        demo_url VARCHAR(500),
-        statut ENUM('actif', 'inactif', 'brouillon') DEFAULT 'actif',
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_statut (statut)
-      )
-    `);
+    // 2. Créer les informations personnelles
+    console.log("📝 Création des informations personnelles...");
+    const personalInfo = await PersonalInfo.create({
+      nom_complet: "Mr MAKOSSO",
+      profession: "Étudiant en Génie Logiciel",
+      localisation: "Libreville, Gabon",
+      description_courte:
+        "Passionné par le développement web et les nouvelles technologies. Spécialisé en développement Full Stack avec React, Node.js et MongoDB.",
+      email_contact: "contact@makosso-portfolio.com",
+      github_url: "https://github.com/makosso",
+      linkedin_url: "https://linkedin.com/in/makosso",
+      facebook_url: null,
+    });
+    console.log("✅ Informations personnelles créées");
 
-    // Créer la table skills
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS skills (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nom VARCHAR(255) NOT NULL,
-        niveau INT NOT NULL CHECK (niveau >= 0 AND niveau <= 100),
-        categorie VARCHAR(100) NOT NULL,
-        icone VARCHAR(100),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX idx_categorie (categorie)
-      )
-    `);
-
-    // Créer la table contacts
-    await connection.execute(`
-      CREATE TABLE IF NOT EXISTS contacts (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nom VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        message TEXT NOT NULL,
-        ip_address VARCHAR(45),
-        is_read BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        INDEX idx_is_read (is_read),
-        INDEX idx_created_at (created_at)
-      )
-    `);
-
-    console.log('✅ Tables créées avec succès');
-
-    // Créer l'utilisateur admin par défaut
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@makosso-portfolio.com';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'AdminSecure123!';
-    
-    // Vérifier si l'admin existe déjà
-    const [existingAdmin] = await connection.execute(
-      'SELECT id FROM users WHERE email = ?',
-      [adminEmail]
-    );
-
-    if (existingAdmin.length === 0) {
-      const hashedPassword = await bcrypt.hash(adminPassword, 12);
-      await connection.execute(
-        'INSERT INTO users (email, password, nom, role) VALUES (?, ?, ?, ?)',
-        [adminEmail, hashedPassword, 'Administrateur', 'admin']
-      );
-      console.log('✅ Utilisateur admin créé');
-      console.log(`📧 Email: ${adminEmail}`);
-      console.log(`🔑 Mot de passe: ${adminPassword}`);
-    } else {
-      console.log('ℹ️  Utilisateur admin existe déjà');
-    }
-
-    // Insérer les informations personnelles par défaut de Mr MAKOSSO
-    const [existingInfo] = await connection.execute('SELECT id FROM personal_info LIMIT 1');
-    
-    if (existingInfo.length === 0) {
-      await connection.execute(`
-        INSERT INTO personal_info 
-        (nom_complet, profession, localisation, description_courte, email_contact, github_url, linkedin_url, facebook_url)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-      `, [
-        'Mr MAKOSSO',
-        'Étudiant en informatique, spécialité Génie Logiciel',
-        'Libreville, Gabon',
-        'Passionné par le développement web et la création de solutions numériques innovantes. Curieux, motivé et orienté vers les résultats.',
-        'tonemail@example.com',
-        'https://github.com/tonprofil',
-        'https://linkedin.com/in/tonprofil',
-        'https://facebook.com/tonprofil'
-      ]);
-      console.log('✅ Informations personnelles par défaut ajoutées');
-    }
-
-    // Insérer les compétences par défaut
-    const [existingSkills] = await connection.execute('SELECT id FROM skills LIMIT 1');
-    
-    if (existingSkills.length === 0) {
-      const defaultSkills = [
-        // Frontend
-        ['HTML', 95, 'Frontend', 'Code'],
-        ['CSS', 90, 'Frontend', 'Palette'],
-        ['JavaScript', 88, 'Frontend', 'Code'],
-        ['TypeScript', 82, 'Frontend', 'Code'],
-        ['React', 85, 'Frontend', 'Code'],
-        ['TailwindCSS', 90, 'Frontend', 'Palette'],
-        
-        // Backend
-        ['Node.js', 80, 'Backend', 'Database'],
-        ['Express.js', 78, 'Backend', 'Database'],
-        ['MySQL', 75, 'Backend', 'Database'],
-        ['Laravel', 70, 'Backend', 'Database'],
-        
-        // Outils
-        ['Git', 85, 'Outils', 'Settings'],
-        ['VS Code', 90, 'Outils', 'Settings'],
-        ['C#', 65, 'Outils', 'Code']
-      ];
-
-      for (const skill of defaultSkills) {
-        await connection.execute(
-          'INSERT INTO skills (nom, niveau, categorie, icone) VALUES (?, ?, ?, ?)',
-          skill
-        );
-      }
-      console.log('✅ Compétences par défaut ajoutées');
-    }
-
-    // Insérer les projets par défaut
-    const [existingProjects] = await connection.execute('SELECT id FROM projects LIMIT 1');
-    
-    if (existingProjects.length === 0) {
-      const defaultProjects = [
-        [
-          'Système numérique de dépôt et suivi des candidatures aux concours gabonais',
-          'Plateforme complète permettant aux candidats de déposer leurs candidatures en ligne et de suivre l\'état de leur dossier en temps réel.',
-          JSON.stringify(['React', 'Node.js', 'MySQL', 'Express.js']),
-          '/api/placeholder/600/400',
-          'https://github.com/tonprofil/concours-gabon',
-          'https://concours-gabon-demo.com',
-          'actif'
+    // 3. Créer des projets de démonstration
+    console.log("📁 Création des projets...");
+    const projects = [
+      {
+        titre: "Système de Candidatures aux Concours",
+        description:
+          "Plateforme web complète permettant aux candidats de s'inscrire aux concours gabonais en ligne. Gestion des dossiers, paiements en ligne et suivi des candidatures.",
+        technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe"],
+        github_url: "https://github.com/makosso/concours-app",
+        demo_url: "https://concours-demo.com",
+        statut: "actif",
+      },
+      {
+        titre: "Application de Gestion RH",
+        description:
+          "Solution de gestion des ressources humaines avec gestion des employés, congés, paies et évaluations de performance.",
+        technologies: ["Vue.js", "Laravel", "MySQL", "Tailwind CSS"],
+        github_url: "https://github.com/makosso/rh-app",
+        demo_url: null,
+        statut: "actif",
+      },
+      {
+        titre: "Plateforme de Gestion Scolaire",
+        description:
+          "Système complet de gestion d'établissement scolaire incluant notes, absences, emplois du temps et communication parents-professeurs.",
+        technologies: [
+          "React",
+          "TypeScript",
+          "Node.js",
+          "PostgreSQL",
+          "Socket.io",
         ],
-        [
-          'Application de gestion des ressources humaines',
-          'Système complet de gestion RH incluant la gestion des employés, des congés, de la paie et des évaluations de performance.',
-          JSON.stringify(['React', 'Node.js', 'MySQL', 'TailwindCSS']),
-          '/api/placeholder/600/400',
-          'https://github.com/tonprofil/rh-management',
-          'https://rh-management-demo.com',
-          'actif'
-        ],
-        [
-          'Application de gestion scolaire',
-          'Plateforme éducative pour la gestion des élèves, des notes, des emplois du temps et la communication école-famille.',
-          JSON.stringify(['React', 'Node.js', 'MySQL', 'Express.js']),
-          '/api/placeholder/600/400',
-          'https://github.com/tonprofil/school-management',
-          'https://school-management-demo.com',
-          'actif'
-        ]
-      ];
+        github_url: "https://github.com/makosso/school-app",
+        demo_url: "https://school-demo.com",
+        statut: "actif",
+      },
+    ];
 
-      for (const project of defaultProjects) {
-        await connection.execute(
-          'INSERT INTO projects (titre, description, technologies, image_url, github_url, demo_url, statut) VALUES (?, ?, ?, ?, ?, ?, ?)',
-          project
-        );
-      }
-      console.log('✅ Projets par défaut ajoutés');
+    for (const projectData of projects) {
+      await Project.create(projectData);
     }
+    console.log(`✅ ${projects.length} projets créés`);
 
-    console.log('\n🎉 Initialisation terminée avec succès !');
-    console.log('\n📋 Résumé:');
-    console.log(`   - Base de données: ${dbName}`);
-    console.log(`   - Email admin: ${adminEmail}`);
-    console.log(`   - Mot de passe admin: ${adminPassword}`);
-    console.log('\n💡 N\'oubliez pas de créer le dossier "uploads" pour les images');
+    // 4. Créer des compétences
+    console.log("🎯 Création des compétences...");
+    const skills = [
+      // Frontend
+      { nom: "HTML/CSS", niveau: 90, categorie: "Frontend", icone: "Code" },
+      {
+        nom: "JavaScript",
+        niveau: 85,
+        categorie: "Frontend",
+        icone: "FileCode",
+      },
+      {
+        nom: "TypeScript",
+        niveau: 80,
+        categorie: "Frontend",
+        icone: "FileCode",
+      },
+      { nom: "React", niveau: 85, categorie: "Frontend", icone: "Atom" },
+      { nom: "Vue.js", niveau: 75, categorie: "Frontend", icone: "Layers" },
+      {
+        nom: "Tailwind CSS",
+        niveau: 90,
+        categorie: "Frontend",
+        icone: "Palette",
+      },
 
+      // Backend
+      { nom: "Node.js", niveau: 85, categorie: "Backend", icone: "Server" },
+      { nom: "Express", niveau: 85, categorie: "Backend", icone: "Zap" },
+      { nom: "MongoDB", niveau: 80, categorie: "Backend", icone: "Database" },
+      { nom: "MySQL", niveau: 75, categorie: "Backend", icone: "Database" },
+      { nom: "PHP/Laravel", niveau: 70, categorie: "Backend", icone: "Code" },
+
+      // Outils
+      {
+        nom: "Git/GitHub",
+        niveau: 85,
+        categorie: "Outils",
+        icone: "GitBranch",
+      },
+      { nom: "VS Code", niveau: 90, categorie: "Outils", icone: "Code2" },
+      { nom: "Docker", niveau: 65, categorie: "Outils", icone: "Box" },
+      { nom: "Postman", niveau: 80, categorie: "Outils", icone: "Send" },
+    ];
+
+    for (const skillData of skills) {
+      await Skill.create(skillData);
+    }
+    console.log(`✅ ${skills.length} compétences créées`);
+
+    // 5. Créer un message de contact de test
+    console.log("📧 Création d'un message de test...");
+    await Contact.create({
+      nom: "Utilisateur Test",
+      email: "test@example.com",
+      message:
+        "Ceci est un message de test pour vérifier le système de contact.",
+      ip_address: "127.0.0.1",
+      is_read: false,
+    });
+    console.log("✅ Message de test créé");
+
+    console.log("\n🎉 Base de données initialisée avec succès !");
+    console.log("\n📊 Résumé:");
+    console.log(`   - Utilisateur admin: ${adminEmail}`);
+    console.log(`   - Mot de passe: ${adminPassword}`);
+    console.log(`   - Projets: ${projects.length}`);
+    console.log(`   - Compétences: ${skills.length}`);
+    console.log(`   - Messages: 1`);
+    console.log("\n⚠️  N'oubliez pas de changer le mot de passe admin !");
   } catch (error) {
-    console.error('❌ Erreur lors de l\'initialisation:', error.message);
-    process.exit(1);
+    console.error("❌ Erreur lors de l'initialisation:", error);
   } finally {
-    if (connection) {
-      await connection.end();
-    }
+    await mongoose.connection.close();
+    console.log("\n👋 Connexion MongoDB fermée");
+    process.exit(0);
   }
 }
 
 // Exécuter l'initialisation
-if (require.main === module) {
-  initializeDatabase();
-}
-
-module.exports = { initializeDatabase };
+initDatabase();

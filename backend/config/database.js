@@ -1,35 +1,31 @@
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-const mysql = require('mysql2');
-require('dotenv').config();
+// Configuration de la connexion MongoDB
+const connectDB = async () => {
+  try {
+    const mongoURI =
+      process.env.MONGODB_URI || "mongodb://localhost:27017/portfolio_makosso";
 
-// Configuration de la connexion MySQL
-const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'portfolio_makosso',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  acquireTimeout: 60000,
-  timeout: 60000
+    await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log("✅ Connexion MongoDB établie avec succès");
+  } catch (error) {
+    console.error("❌ Erreur de connexion MongoDB:", error.message);
+    process.exit(1);
+  }
 };
 
-// Création du pool de connexions
-const pool = mysql.createPool(dbConfig);
+// Gestion des événements de connexion
+mongoose.connection.on("disconnected", () => {
+  console.log("⚠️  MongoDB déconnecté");
+});
 
-// Promisify pour async/await
-const promisePool = pool.promise();
+mongoose.connection.on("error", (err) => {
+  console.error("❌ Erreur MongoDB:", err);
+});
 
-// Test de connexion
-promisePool.getConnection()
-  .then(connection => {
-    console.log('✅ Connexion MySQL établie avec succès');
-    connection.release();
-  })
-  .catch(err => {
-    console.error('❌ Erreur de connexion MySQL:', err.message);
-  });
-
-module.exports = promisePool;
+module.exports = connectDB;

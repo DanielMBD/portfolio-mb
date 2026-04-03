@@ -1,38 +1,52 @@
+import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Send,
+  Github,
+  Linkedin,
+  Facebook,
+} from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { staticPersonalInfo } from "@/services/staticData";
 
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent } from '@/components/ui/card';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Facebook } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { EmailService, ContactFormData } from '@/services/emailService';
-import { staticPersonalInfo } from '@/services/staticData';
+interface ContactFormData {
+  nom: string;
+  email: string;
+  message: string;
+}
 
 const Contact = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState<ContactFormData>({
-    nom: '',
-    email: '',
-    message: ''
+    nom: "",
+    email: "",
+    message: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.nom || !formData.email || !formData.message) {
       toast({
-        title: 'Erreur',
-        description: 'Veuillez remplir tous les champs',
-        variant: 'destructive',
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs",
+        variant: "destructive",
       });
       return;
     }
@@ -40,27 +54,37 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      // Utilise la méthode de fallback pour le moment
-      // Remplacez par EmailService.sendContactEmail(formData) quand EmailJS sera configuré
-      await EmailService.sendContactEmail(formData);
+      // Envoyer le message au backend (sauvegarde en DB + envoi email)
+      const API_BASE_URL = "http://localhost:5000/api";
+      const response = await fetch(`${API_BASE_URL}/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
+      if (!response.ok) {
+        throw new Error("Erreur lors de l'envoi du message");
+      }
 
       toast({
-        title: 'Message envoyé !',
-        description: 'Votre message a été envoyé avec succès. Je vous répondrai bientôt.',
+        title: "Message envoyé !",
+        description:
+          "Votre message a été envoyé avec succès. Je vous répondrai bientôt.",
       });
 
       // Réinitialiser le formulaire
       setFormData({
-        nom: '',
-        email: '',
-        message: ''
+        nom: "",
+        email: "",
+        message: "",
       });
     } catch (error: any) {
       toast({
-        title: 'Erreur',
-        description: error.message || 'Erreur lors de l\'envoi du message',
-        variant: 'destructive',
+        title: "Erreur",
+        description: error.message || "Erreur lors de l'envoi du message",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -89,8 +113,12 @@ const Contact = () => {
                     <Mail className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground">Email</h3>
-                    <p className="text-muted-foreground">{staticPersonalInfo.email_contact}</p>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Email
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {staticPersonalInfo.email_contact}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -103,7 +131,9 @@ const Contact = () => {
                     <Phone className="w-6 h-6 text-success" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground">Téléphone</h3>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Téléphone
+                    </h3>
                     <p className="text-muted-foreground">+241 74604327</p>
                   </div>
                 </div>
@@ -117,8 +147,12 @@ const Contact = () => {
                     <MapPin className="w-6 h-6 text-secondary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-foreground">Localisation</h3>
-                    <p className="text-muted-foreground">{staticPersonalInfo.localisation}</p>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Localisation
+                    </h3>
+                    <p className="text-muted-foreground">
+                      {staticPersonalInfo.localisation}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -127,9 +161,9 @@ const Contact = () => {
             {/* Réseaux sociaux */}
             <div className="flex space-x-4 justify-center lg:justify-start">
               {staticPersonalInfo.github_url && (
-                <a 
-                  href={staticPersonalInfo.github_url} 
-                  target="_blank" 
+                <a
+                  href={staticPersonalInfo.github_url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
@@ -137,9 +171,9 @@ const Contact = () => {
                 </a>
               )}
               {staticPersonalInfo.linkedin_url && (
-                <a 
-                  href={staticPersonalInfo.linkedin_url} 
-                  target="_blank" 
+                <a
+                  href={staticPersonalInfo.linkedin_url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
@@ -147,9 +181,9 @@ const Contact = () => {
                 </a>
               )}
               {staticPersonalInfo.facebook_url && (
-                <a 
-                  href={staticPersonalInfo.facebook_url} 
-                  target="_blank" 
+                <a
+                  href={staticPersonalInfo.facebook_url}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="bg-card border border-border/50 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
@@ -199,13 +233,13 @@ const Contact = () => {
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                   disabled={isLoading}
                 >
                   {isLoading ? (
-                    'Envoi en cours...'
+                    "Envoi en cours..."
                   ) : (
                     <>
                       Envoyer le message

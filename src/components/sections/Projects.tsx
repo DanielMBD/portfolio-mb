@@ -21,16 +21,17 @@ const Projects = () => {
   }
 
   if (error) {
-    console.error('Erreur lors du chargement des projets:', error);
+    console.error("Erreur lors du chargement des projets:", error);
   }
 
-
-  const transformedProjects = projects.map(project => ({
-    id: project.id!,
+  const transformedProjects = projects.map((project) => ({
+    id: project._id!,
     title: project.titre,
     description: project.description,
     longDescription: project.description, // Could be enhanced with a separate field
-    image: project.image_url || "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=600&h=400&fit=crop",
+    image:
+      project.image_url ||
+      "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=600&h=400&fit=crop",
     technologies: project.technologies,
     githubUrl: project.github_url,
     liveUrl: project.demo_url,
@@ -56,10 +57,16 @@ const Projects = () => {
         {/* Featured Projects */}
         {featuredProjects.length > 0 && (
           <div className="mb-16">
-            <h3 className="text-2xl font-semibold mb-8 text-center">Projets Phares</h3>
+            <h3 className="text-2xl font-semibold mb-8 text-center">
+              Projets Phares
+            </h3>
             <div className="grid md:grid-cols-2 gap-8">
               {featuredProjects.map((project, index) => (
-                <Card key={project.id} className="group overflow-hidden glass hover:shadow-card transition-all duration-500 animate-fade-in" style={{ animationDelay: `${index * 0.2}s` }}>
+                <Card
+                  key={project.id}
+                  className="group overflow-hidden glass hover:shadow-card transition-all duration-500 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
                   <div className="relative overflow-hidden">
                     <img
                       src={project.image}
@@ -71,7 +78,11 @@ const Projects = () => {
                       <div className="flex gap-2">
                         {project.githubUrl && (
                           <ButtonVariants variant="glass" size="sm" asChild>
-                            <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={project.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <Github size={16} className="mr-1" />
                               Code
                             </a>
@@ -79,7 +90,11 @@ const Projects = () => {
                         )}
                         {project.liveUrl && (
                           <ButtonVariants variant="glass" size="sm" asChild>
-                            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <ExternalLink size={16} className="mr-1" />
                               Demo
                             </a>
@@ -89,15 +104,24 @@ const Projects = () => {
                     </div>
                   </div>
                   <CardContent className="p-6">
-                    <h4 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h4>
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                        {project.title}
+                      </h4>
+                      <span className="text-xs text-muted-foreground">
+                        #{project.id}
+                      </span>
+                    </div>
                     <p className="text-muted-foreground mb-4 line-clamp-2">
                       {project.description}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-4">
                       {project.technologies.slice(0, 4).map((tech) => (
-                        <Badge key={tech} variant="secondary" className="text-xs">
+                        <Badge
+                          key={tech}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {tech}
                         </Badge>
                       ))}
@@ -107,8 +131,8 @@ const Projects = () => {
                         </Badge>
                       )}
                     </div>
-                    <ButtonVariants 
-                      variant="outline" 
+                    <ButtonVariants
+                      variant="outline"
                       size="sm"
                       onClick={() => setSelectedProject(project.id)}
                       className="w-full"
@@ -167,7 +191,9 @@ const Projects = () => {
 
         {transformedProjects.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Aucun projet disponible pour le moment.</p>
+            <p className="text-muted-foreground">
+              Aucun projet disponible pour le moment.
+            </p>
           </div>
         )}
       </div>

@@ -1,5 +1,4 @@
-
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = "http://localhost:5000/api";
 
 // Types pour l'API
 export interface PersonalInfo {
@@ -16,14 +15,14 @@ export interface PersonalInfo {
 }
 
 export interface Project {
-  id?: number;
+  _id?: string;
   titre: string;
   description: string;
   technologies: string[];
   image_url?: string;
   github_url?: string;
   demo_url?: string;
-  statut: 'actif' | 'inactif';
+  statut: "actif" | "inactif";
 }
 
 export interface Skill {
@@ -35,12 +34,13 @@ export interface Skill {
 }
 
 export interface Contact {
-  id?: number;
+  _id?: string;
   nom: string;
   email: string;
   message: string;
-  created_at?: string;
+  createdAt?: string;
   is_read?: boolean;
+  ip_address?: string;
 }
 
 export interface AuthUser {
@@ -60,61 +60,66 @@ class ApiService {
   private token: string | null = null;
 
   constructor() {
-    this.token = localStorage.getItem('admin_token');
+    this.token = localStorage.getItem("admin_token");
   }
 
   private getHeaders() {
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
-    
+
     if (this.token) {
       headers.Authorization = `Bearer ${this.token}`;
     }
-    
+
     return headers;
   }
 
   // Authentication
-  async login(email: string, password: string): Promise<{ token: string; user: AuthUser }> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ token: string; user: AuthUser }> {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Erreur de connexion');
+      throw new Error(error.error || "Erreur de connexion");
     }
 
     const data = await response.json();
     this.token = data.token;
-    localStorage.setItem('admin_token', data.token);
+    localStorage.setItem("admin_token", data.token);
     return data;
   }
 
-  async register(registerData: RegisterData): Promise<{ token: string; user: AuthUser }> {
+  async register(
+    registerData: RegisterData,
+  ): Promise<{ token: string; user: AuthUser }> {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(registerData),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Erreur lors de l\'inscription');
+      throw new Error(error.error || "Erreur lors de l'inscription");
     }
 
     const data = await response.json();
     this.token = data.token;
-    localStorage.setItem('admin_token', data.token);
+    localStorage.setItem("admin_token", data.token);
     return data;
   }
 
   async logout(): Promise<void> {
     this.token = null;
-    localStorage.removeItem('admin_token');
+    localStorage.removeItem("admin_token");
   }
 
   async verifyToken(): Promise<{ valid: boolean; user?: AuthUser }> {
@@ -147,28 +152,30 @@ class ApiService {
   }
 
   // Contact
-  async sendContact(contact: Omit<Contact, 'id' | 'created_at' | 'is_read'>): Promise<void> {
+  async sendContact(
+    contact: Omit<Contact, "_id" | "createdAt" | "is_read" | "ip_address">,
+  ): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/contact`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(contact),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de l\'envoi du message');
+      throw new Error("Erreur lors de l'envoi du message");
     }
   }
 
   // Admin - Personal Info
   async updatePersonalInfo(data: PersonalInfo): Promise<PersonalInfo> {
     const response = await fetch(`${API_BASE_URL}/admin/personal-info`, {
-      method: 'PUT',
+      method: "PUT",
       headers: this.getHeaders(),
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la mise à jour');
+      throw new Error("Erreur lors de la mise à jour");
     }
 
     return await response.json();
@@ -182,40 +189,40 @@ class ApiService {
     return await response.json();
   }
 
-  async createProject(project: Omit<Project, 'id'>): Promise<Project> {
+  async createProject(project: Omit<Project, "_id">): Promise<Project> {
     const response = await fetch(`${API_BASE_URL}/admin/projects`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(project),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la création');
+      throw new Error("Erreur lors de la création");
     }
 
     return await response.json();
   }
 
-  async updateProject(id: number, project: Partial<Project>): Promise<void> {
+  async updateProject(id: string, project: Partial<Project>): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/projects/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: this.getHeaders(),
       body: JSON.stringify(project),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la mise à jour');
+      throw new Error("Erreur lors de la mise à jour");
     }
   }
 
-  async deleteProject(id: number): Promise<void> {
+  async deleteProject(id: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/projects/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: this.getHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la suppression');
+      throw new Error("Erreur lors de la suppression");
     }
   }
 
@@ -227,15 +234,15 @@ class ApiService {
     return await response.json();
   }
 
-  async createSkill(skill: Omit<Skill, 'id'>): Promise<Skill> {
+  async createSkill(skill: Omit<Skill, "id">): Promise<Skill> {
     const response = await fetch(`${API_BASE_URL}/admin/skills`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(skill),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la création');
+      throw new Error("Erreur lors de la création");
     }
 
     return await response.json();
@@ -243,64 +250,70 @@ class ApiService {
 
   async updateSkill(id: number, skill: Partial<Skill>): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/skills/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: this.getHeaders(),
       body: JSON.stringify(skill),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la mise à jour');
+      throw new Error("Erreur lors de la mise à jour");
     }
   }
 
   async deleteSkill(id: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/skills/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: this.getHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la suppression');
+      throw new Error("Erreur lors de la suppression");
     }
   }
 
   // Admin - Contacts
-  async getContacts(page = 1, limit = 20): Promise<{ contacts: Contact[]; unreadCount: number }> {
-    const response = await fetch(`${API_BASE_URL}/admin/contacts?page=${page}&limit=${limit}`, {
-      headers: this.getHeaders(),
-    });
+  async getContacts(
+    page = 1,
+    limit = 20,
+  ): Promise<{ contacts: Contact[]; unreadCount: number }> {
+    const response = await fetch(
+      `${API_BASE_URL}/admin/contacts?page=${page}&limit=${limit}`,
+      {
+        headers: this.getHeaders(),
+      },
+    );
     return await response.json();
   }
 
-  async markContactAsRead(id: number): Promise<void> {
+  async markContactAsRead(id: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/contacts/${id}/read`, {
-      method: 'PUT',
+      method: "PUT",
       headers: this.getHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors du marquage');
+      throw new Error("Erreur lors du marquage");
     }
   }
 
-  async deleteContact(id: number): Promise<void> {
+  async deleteContact(id: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/admin/contacts/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: this.getHeaders(),
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de la suppression');
+      throw new Error("Erreur lors de la suppression");
     }
   }
 
   // Upload
   async uploadImage(file: File): Promise<{ imageUrl: string }> {
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append("image", file);
 
     const response = await fetch(`${API_BASE_URL}/admin/upload`, {
-      method: 'POST',
+      method: "POST",
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
@@ -308,7 +321,7 @@ class ApiService {
     });
 
     if (!response.ok) {
-      throw new Error('Erreur lors de l\'upload');
+      throw new Error("Erreur lors de l'upload");
     }
 
     return await response.json();
