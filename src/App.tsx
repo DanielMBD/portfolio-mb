@@ -1,15 +1,16 @@
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/contexts/AuthContext';
-import Index from '@/pages/Index';
-import NotFound from '@/pages/NotFound';
-import AdminLogin from '@/pages/admin/AdminLogin';
-import AdminRegister from '@/pages/admin/AdminRegister';
-import AdminDashboard from '@/pages/admin/AdminDashboard';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@/components/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/contexts/AuthContext";
+import Index from "@/pages/Index";
+import NotFound from "@/pages/NotFound";
+import ProjectsPage from "@/pages/ProjectsPage";
+import ProjectDetail from "@/pages/ProjectDetail";
+import AdminLogin from "@/pages/admin/AdminLogin";
+import AdminRegister from "@/pages/admin/AdminRegister";
+import AdminDashboard from "@/pages/admin/AdminDashboard";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,8 @@ function App() {
             <div className="min-h-screen bg-background">
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/projects" element={<ProjectsPage />} />
+                <Route path="/projects/:id" element={<ProjectDetail />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin/register" element={<AdminRegister />} />
                 <Route

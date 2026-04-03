@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Github, ExternalLink, Eye } from "lucide-react";
-import { ButtonVariants } from "@/components/ui/button-variants";
+import { Link } from "react-router-dom";
+import { Github, ExternalLink, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useProjects } from "@/hooks/usePortfolio";
 
 const Projects = () => {
@@ -38,8 +38,7 @@ const Projects = () => {
     featured: true, // You could add a featured field to the backend
   }));
 
-  const featuredProjects = transformedProjects.slice(0, 3); // Show first 2 as featured
-  const otherProjects = transformedProjects.slice(0); // Rest as other projects
+  const featuredProjects = transformedProjects.slice(0, 6); // Afficher 6 projets
 
   return (
     <section id="projects" className="py-20 relative">
@@ -65,124 +64,100 @@ const Projects = () => {
 
         {/* Featured Projects */}
         {featuredProjects.length > 0 && (
-          <div className="mb-16">
+          <div className="mb-12">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProjects.map((project, index) => (
-                <Card
-                  key={project.id}
-                  className="group relative overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 animate-fade-in bg-card/50 backdrop-blur"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  {/* Image avec overlay */}
-                  <div className="relative overflow-hidden aspect-video">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
+                <Link key={project.id} to={`/projects/${project.id}`}>
+                  <Card
+                    className="group relative overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 animate-fade-in bg-card/50 backdrop-blur h-full"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    {/* Image avec overlay */}
+                    <div className="relative overflow-hidden aspect-video">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      {/* Overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-60" />
 
-                    {/* Boutons d'action */}
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-lg bg-background/90 backdrop-blur border border-border hover:bg-primary hover:text-primary-foreground transition-all"
-                        >
-                          <Github size={18} />
-                        </a>
-                      )}
-                      {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-lg bg-background/90 backdrop-blur border border-border hover:bg-primary hover:text-primary-foreground transition-all"
-                        >
-                          <ExternalLink size={18} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Contenu */}
-                  <CardContent className="p-6 space-y-4">
-                    <div>
-                      <h4 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h4>
-                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                        {project.description}
-                      </p>
+                      {/* Boutons d'action */}
+                      <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        {project.githubUrl && (
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-2 rounded-lg bg-background/90 backdrop-blur border border-border hover:bg-primary hover:text-primary-foreground transition-all"
+                          >
+                            <Github size={18} />
+                          </a>
+                        )}
+                        {project.liveUrl && (
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="p-2 rounded-lg bg-background/90 backdrop-blur border border-border hover:bg-primary hover:text-primary-foreground transition-all"
+                          >
+                            <ExternalLink size={18} />
+                          </a>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Technologies */}
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.slice(0, 3).map((tech) => (
-                        <span
-                          key={tech}
-                          className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                      {project.technologies.length > 3 && (
-                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground">
-                          +{project.technologies.length - 3}
-                        </span>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
+                    {/* Contenu */}
+                    <CardContent className="p-6 space-y-4">
+                      <div>
+                        <h4 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors">
+                          {project.title}
+                        </h4>
+                        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                          {project.description}
+                        </p>
+                      </div>
+
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-2">
+                        {project.technologies.slice(0, 3).map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {project.technologies.length > 3 && (
+                          <span className="px-3 py-1 text-xs font-medium rounded-full bg-muted text-muted-foreground">
+                            +{project.technologies.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
         )}
 
-        {/* Other Projects */}
-        {/*{otherProjects.length > 0 && (*/}
-        {/*  <div>*/}
-        {/*    <h3 className="text-2xl font-semibold mb-8 text-center">Autres Projets</h3>*/}
-        {/*    <div className="grid md:grid-cols-3 gap-6">*/}
-        {/*      {otherProjects.map((project, index) => (*/}
-        {/*        <Card key={project.id} className="glass hover:shadow-card transition-all duration-300 animate-fade-in" style={{ animationDelay: `${(index + 2) * 0.2}s` }}>*/}
-        {/*          <CardContent className="p-6">*/}
-        {/*            <h4 className="text-lg font-semibold mb-2">{project.title}</h4>*/}
-        {/*            <p className="text-muted-foreground mb-4 text-sm line-clamp-3">*/}
-        {/*              {project.description}*/}
-        {/*            </p>*/}
-        {/*            <div className="flex flex-wrap gap-1 mb-4">*/}
-        {/*              {project.technologies.slice(0, 3).map((tech) => (*/}
-        {/*                <Badge key={tech} variant="secondary" className="text-xs">*/}
-        {/*                  {tech}*/}
-        {/*                </Badge>*/}
-        {/*              ))}*/}
-        {/*            </div>*/}
-        {/*            <div className="flex gap-2">*/}
-        {/*              {project.githubUrl && (*/}
-        {/*                <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>*/}
-        {/*                  <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">*/}
-        {/*                    <Github size={14} />*/}
-        {/*                  </a>*/}
-        {/*                </ButtonVariants>*/}
-        {/*              )}*/}
-        {/*              {project.liveUrl && (*/}
-        {/*                <ButtonVariants variant="outline" size="sm" className="flex-1" asChild>*/}
-        {/*                  <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">*/}
-        {/*                    <ExternalLink size={14} />*/}
-        {/*                  </a>*/}
-        {/*                </ButtonVariants>*/}
-        {/*              )}*/}
-        {/*            </div>*/}
-        {/*          </CardContent>*/}
-        {/*        </Card>*/}
-        {/*      ))}*/}
-        {/*    </div>*/}
-        {/*  </div>*/}
-        {/*)}*/}
+        {/* Bouton Voir tous les projets */}
+        {transformedProjects.length > 6 && (
+          <div className="text-center">
+            <Link to="/projects">
+              <Button size="lg" variant="outline" className="group">
+                Voir tous les projets
+                <ArrowRight
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                  size={20}
+                />
+              </Button>
+            </Link>
+          </div>
+        )}
 
         {transformedProjects.length === 0 && (
           <div className="text-center py-12">

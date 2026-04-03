@@ -16,9 +16,6 @@ const Hero = () => {
       {/* Background épuré */}
       <div className="absolute inset-0 bg-background" />
 
-      {/* Grille subtile */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#15396b08_1px,transparent_1px),linear-gradient(to_bottom,#15396b08_1px,transparent_1px)] bg-[size:3rem_3rem]" />
-
       {/* Accent minimaliste */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
