@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { staticPersonalInfo } from "@/services/staticData";
+import apiService from "@/services/api";
 
 interface ContactFormData {
   nom: string;
@@ -54,19 +55,8 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      // Envoyer le message au backend (sauvegarde en DB + envoi email)
-      const API_BASE_URL = "http://localhost:5000/api";
-      const response = await fetch(`${API_BASE_URL}/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'envoi du message");
-      }
+      // Utiliser le service API centralisé
+      await apiService.sendContact(formData);
 
       toast({
         title: "Message envoyé !",

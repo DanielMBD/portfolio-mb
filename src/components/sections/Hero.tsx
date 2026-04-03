@@ -23,84 +23,90 @@ const Hero = () => {
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center space-y-8 animate-fade-in">
-            {/* Titre principal */}
-            <div className="space-y-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Contenu principal à gauche */}
+            <div className="space-y-8 animate-fade-in">
               <div className="inline-block">
                 <span className="text-sm font-semibold text-primary uppercase tracking-widest">
                   Développeur Full Stack
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-                {personalInfo?.nom_complet || "MAKOSSO Daniel"}
-              </h1>
+              <div className="space-y-6">
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+                  {personalInfo?.nom_complet || "MAKOSSO Daniel"}
+                </h1>
 
-              <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                {personalInfo?.description_courte ||
-                  "Étudiant en Génie Logiciel passionné par la création de solutions web modernes et performantes"}
-              </p>
+                <h2 className="text-2xl md:text-3xl font-semibold text-muted-foreground">
+                  {personalInfo?.profession || "Étudiant en Génie Logiciel"}
+                </h2>
 
-              {/* Localisation */}
-              <div className="flex items-center justify-center gap-2 text-muted-foreground">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="text-sm">
-                  {personalInfo?.localisation || "Libreville, Gabon"}
-                </span>
+                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                  {personalInfo?.description_courte ||
+                    "Passionné par le développement web et la création de solutions numériques innovantes"}
+                </p>
+
+                {/* Localisation */}
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  <span className="text-sm">
+                    {personalInfo?.localisation || "Libreville, Gabon"}
+                  </span>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap gap-4 pt-4">
+                <button
+                  onClick={scrollToContact}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5"
+                >
+                  <Mail size={20} />
+                  Me contacter
+                </button>
+
+                <a
+                  href="/CvDanielMakosso.pdf"
+                  download
+                  className="inline-flex items-center gap-2 px-8 py-4 border-2 border-border rounded-lg font-medium hover:border-primary hover:text-primary transition-all hover:-translate-y-0.5"
+                >
+                  <Download size={20} />
+                  Télécharger CV
+                </a>
+              </div>
+
+              {/* Liens sociaux */}
+              <div className="flex items-center gap-4 pt-4">
+                {personalInfo?.github_url && (
+                  <a
+                    href={personalInfo.github_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
+                    aria-label="GitHub"
+                  >
+                    <Github size={20} />
+                  </a>
+                )}
+                {personalInfo?.linkedin_url && (
+                  <a
+                    href={personalInfo.linkedin_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
+                    aria-label="LinkedIn"
+                  >
+                    <Linkedin size={20} />
+                  </a>
+                )}
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap justify-center gap-4 pt-6">
-              <button
-                onClick={scrollToContact}
-                className="inline-flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground rounded-lg font-medium transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5"
-              >
-                <Mail size={20} />
-                Me contacter
-              </button>
-
-              <a
-                href="/CvDanielMakosso.pdf"
-                download
-                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-border rounded-lg font-medium hover:border-primary hover:text-primary transition-all hover:-translate-y-0.5"
-              >
-                <Download size={20} />
-                Télécharger CV
-              </a>
-            </div>
-
-            {/* Liens sociaux */}
-            <div className="flex items-center justify-center gap-4 pt-8">
-              {personalInfo?.github_url && (
-                <a
-                  href={personalInfo.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
-                  aria-label="GitHub"
-                >
-                  <Github size={20} />
-                </a>
-              )}
-              {personalInfo?.linkedin_url && (
-                <a
-                  href={personalInfo.linkedin_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 rounded-lg border border-border hover:border-primary hover:bg-primary/5 transition-all"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin size={20} />
-                </a>
-              )}
-            </div>
-
-            {/* Photo de profil centrée */}
-            <div className="pt-12 flex justify-center">
+            {/* Photo de profil à droite */}
+            <div className="flex justify-center lg:justify-end">
               <div className="relative group">
-                <div className="relative w-64 h-64 md:w-80 md:h-80">
+                <div className="relative w-80 h-80 lg:w-[420px] lg:h-[420px]">
                   {/* Bordure simple */}
                   <div className="absolute inset-0 rounded-2xl border-2 border-primary/20 group-hover:border-primary/40 transition-all" />
 
