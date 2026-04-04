@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -19,29 +19,34 @@ export default function SubdomainManager() {
   const [saving, setSaving] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadSubdomainInfo();
-  }, []);
-
-  const loadSubdomainInfo = async () => {
+  const loadSubdomainInfo = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await api.get("/admin/subdomain");
-      setSubdomain(response.data.subdomain || "");
-      setCustomDomain(response.data.customDomain || "");
-    } catch (error: any) {
+      const response = await api.get<{
+        subdomain?: string;
+        customDomain?: string;
+      }>("/admin/subdomain");
+      setSubdomain(response.subdomain || "");
+      setCustomDomain(response.customDomain || "");
+    } catch (error: unknown) {
       console.error("Erreur chargement sous-domaine:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Impossible de charger les informations";
       toast({
         title: "Erreur",
-        description:
-          error.response?.data?.error ||
-          "Impossible de charger les informations",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    loadSubdomainInfo();
+  }, [loadSubdomainInfo]);
 
   const handleSave = async () => {
     if (subdomain && !/^[a-z0-9-]+$/.test(subdomain)) {
@@ -74,11 +79,13 @@ export default function SubdomainManager() {
         title: "Succès",
         description: "Sous-domaine mis à jour avec succès",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Erreur sauvegarde sous-domaine:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Impossible de sauvegarder";
       toast({
         title: "Erreur",
-        description: error.response?.data?.error || "Impossible de sauvegarder",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

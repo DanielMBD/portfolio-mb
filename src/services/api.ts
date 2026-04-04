@@ -327,6 +327,64 @@ class ApiService {
 
     return await response.json();
   }
+
+  // Generic methods for flexibility
+  async get<T = any>(endpoint: string): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erreur lors de la requête");
+    }
+
+    return await response.json();
+  }
+
+  async post<T = any>(endpoint: string, data: Record<string, any>): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "POST",
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erreur lors de la requête");
+    }
+
+    return await response.json();
+  }
+
+  async put<T = any>(endpoint: string, data: Record<string, any>): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "PUT",
+      headers: this.getHeaders(),
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erreur lors de la requête");
+    }
+
+    return await response.json();
+  }
+
+  async delete<T = any>(endpoint: string): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "DELETE",
+      headers: this.getHeaders(),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Erreur lors de la requête");
+    }
+
+    return await response.json();
+  }
 }
 
 export default new ApiService();
