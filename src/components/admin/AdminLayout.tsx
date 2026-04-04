@@ -12,6 +12,7 @@ import {
   Home,
   Menu,
   X,
+  Globe,
 } from "lucide-react";
 
 interface AdminLayoutProps {
@@ -29,6 +30,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { name: "Projets", href: "/admin/projects", icon: FolderOpen },
     { name: "Compétences", href: "/admin/skills", icon: Code },
     { name: "Messages", href: "/admin/contacts", icon: MessageSquare },
+    { name: "Sous-domaine", href: "/admin/subdomain", icon: Globe },
   ];
 
   const handleLogout = async () => {

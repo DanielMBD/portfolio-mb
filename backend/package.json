@@ -8,7 +8,9 @@
     "dev": "nodemon server.js",
     "init-db": "node scripts/initDatabase.js",
     "check-deploy": "node scripts/check-deployment.js",
-    "seed": "node scripts/seedStaticData.js"
+    "seed": "node scripts/seedStaticData.js",
+    "migrate": "node scripts/migrateUserData.js",
+    "test-multi-user": "node test-multi-user.js"
   },
   "dependencies": {
     "express": "^4.19.2",

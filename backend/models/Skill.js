@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const skillSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     nom: {
       type: String,
       required: true,
@@ -15,7 +20,6 @@ const skillSchema = new mongoose.Schema(
     categorie: {
       type: String,
       required: true,
-      enum: ["Frontend", "Backend", "Outils", "Autres"],
     },
     icone: {
       type: String,
@@ -28,23 +32,7 @@ const skillSchema = new mongoose.Schema(
 );
 
 // Index pour améliorer les performances
-skillSchema.index({ categorie: 1, niveau: -1 });
-
-// Méthode statique pour obtenir les compétences groupées par catégorie
-skillSchema.statics.getByCategory = async function () {
-  const skills = await this.find().sort({ categorie: 1, niveau: -1 });
-
-  // Grouper par catégorie
-  const skillsByCategory = skills.reduce((acc, skill) => {
-    if (!acc[skill.categorie]) {
-      acc[skill.categorie] = [];
-    }
-    acc[skill.categorie].push(skill);
-    return acc;
-  }, {});
-
-  return skillsByCategory;
-};
+skillSchema.index({ userId: 1, categorie: 1, niveau: -1 });
 
 const Skill = mongoose.model("Skill", skillSchema);
 

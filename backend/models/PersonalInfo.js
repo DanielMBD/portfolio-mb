@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const personalInfoSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+    },
     nom_complet: {
       type: String,
       required: true,
@@ -44,31 +50,26 @@ const personalInfoSchema = new mongoose.Schema(
   },
 );
 
-// Méthode statique pour obtenir ou créer les informations personnelles
-personalInfoSchema.statics.getOrCreate = async function () {
-  let info = await this.findOne();
+// Index pour améliorer les performances
+personalInfoSchema.index({ userId: 1 });
+
+// Méthode statique pour obtenir ou créer les informations personnelles d'un utilisateur
+personalInfoSchema.statics.getOrCreateForUser = async function (userId) {
+  let info = await this.findOne({ userId });
   if (!info) {
+    const User = mongoose.model("User");
+    const user = await User.findById(userId);
+
     info = await this.create({
-      nom_complet: "Mr MAKOSSO",
-      profession: "Étudiant en Génie Logiciel",
-      localisation: "Libreville, Gabon",
-      description_courte:
-        "Passionné par le développement web et les nouvelles technologies",
-      email_contact: "contact@makosso-portfolio.com",
+      userId,
+      nom_complet: user.nom,
+      profession: "Développeur",
+      localisation: "Non spécifié",
+      description_courte: "Passionné par le développement web",
+      email_contact: user.email,
     });
   }
   return info;
-};
-
-// Méthode statique pour mettre à jour les informations
-personalInfoSchema.statics.updateInfo = async function (data) {
-  let info = await this.findOne();
-  if (info) {
-    Object.assign(info, data);
-    return await info.save();
-  } else {
-    return await this.create(data);
-  }
 };
 
 const PersonalInfo = mongoose.model("PersonalInfo", personalInfoSchema);

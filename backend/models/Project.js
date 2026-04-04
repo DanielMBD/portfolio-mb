@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const projectSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     titre: {
       type: String,
       required: true,
@@ -38,18 +43,7 @@ const projectSchema = new mongoose.Schema(
 );
 
 // Index pour améliorer les performances
-projectSchema.index({ statut: 1, createdAt: -1 });
-
-// Méthode statique pour obtenir tous les projets actifs
-projectSchema.statics.getActive = function () {
-  return this.find({ statut: "actif" }).sort({ createdAt: -1 });
-};
-
-// Méthode statique pour obtenir tous les projets (incluant inactifs)
-projectSchema.statics.getAll = function (includeInactive = false) {
-  const query = includeInactive ? {} : { statut: "actif" };
-  return this.find(query).sort({ createdAt: -1 });
-};
+projectSchema.index({ userId: 1, statut: 1, createdAt: -1 });
 
 const Project = mongoose.model("Project", projectSchema);
 

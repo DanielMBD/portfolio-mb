@@ -6,10 +6,13 @@ require("dotenv").config();
 
 // Importer la connexion MongoDB
 const connectDB = require("./config/database");
+const subdomainMiddleware = require("./middleware/subdomain");
 const authRoutes = require("./routes/auth");
 const portfolioRoutes = require("./routes/portfolio");
+const publicRoutes = require("./routes/public");
 const adminRoutes = require("./routes/admin");
 const contactRoutes = require("./routes/contact");
+const experienceRoutes = require("./routes/experience");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -59,14 +62,19 @@ app.use(limiter);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Middleware de détection des sous-domaines
+app.use(subdomainMiddleware);
+
 // Servir les fichiers statiques (uploads)
 app.use("/uploads", express.static("uploads"));
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/portfolio", portfolioRoutes);
+app.use("/api/public", publicRoutes); // Routes publiques pour sous-domaines
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/experience", experienceRoutes);
 
 // Route de test
 app.get("/api/health", (_req, res) => {

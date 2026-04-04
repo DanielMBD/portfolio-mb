@@ -48,6 +48,20 @@ router.use(authenticateToken);
 router.use(requireAdmin);
 
 // GESTION DES INFORMATIONS PERSONNELLES
+// GET /api/admin/personal-info - Récupérer les infos personnelles de l'utilisateur
+router.get("/personal-info", async (req, res) => {
+  try {
+    const info = await PersonalInfo.findOne({ userId: req.user.id });
+    if (!info) {
+      return res.status(404).json({ error: "Informations non trouvées" });
+    }
+    res.json(info);
+  } catch (error) {
+    console.error("Erreur récupération info:", error);
+    res.status(500).json({ error: "Erreur lors de la récupération" });
+  }
+});
+
 // PUT /api/admin/personal-info - Mettre à jour les infos personnelles
 router.put(
   "/personal-info",
@@ -65,7 +79,16 @@ router.put(
           .json({ error: "Données invalides", details: errors.array() });
       }
 
-      const updatedInfo = await PersonalInfo.updateInfo(req.body);
+      // Ajouter userId aux données
+      const dataWithUserId = { ...req.body, userId: req.user.id };
+
+      // Mettre à jour ou créer les infos pour cet utilisateur
+      const updatedInfo = await PersonalInfo.findOneAndUpdate(
+        { userId: req.user.id },
+        dataWithUserId,
+        { new: true, upsert: true, runValidators: true },
+      );
+
       res.json({ message: "Informations mises à jour", data: updatedInfo });
     } catch (error) {
       console.error("Erreur mise à jour info:", error);
@@ -75,10 +98,13 @@ router.put(
 );
 
 // GESTION DES PROJETS
-// GET /api/admin/projects - Récupérer tous les projets (actifs et inactifs)
+// GET /api/admin/projects - Récupérer tous les projets de l'utilisateur (actifs et inactifs)
 router.get("/projects", async (req, res) => {
   try {
-    const projects = await Project.getAll(true);
+    const projects = await Project.find({ userId: req.user.id }).sort({
+      ordre: 1,
+      date_creation: -1,
+    });
     res.json(projects);
   } catch (error) {
     console.error("Erreur récupération projets admin:", error);
@@ -105,7 +131,9 @@ router.post(
           .json({ error: "Données invalides", details: errors.array() });
       }
 
-      const newProject = await Project.create(req.body);
+      // Ajouter userId au projet
+      const projectData = { ...req.body, userId: req.user.id };
+      const newProject = await Project.create(projectData);
       res.status(201).json({ message: "Projet créé", data: newProject });
     } catch (error) {
       console.error("Erreur création projet:", error);
@@ -130,10 +158,12 @@ router.put(
           .json({ error: "Données invalides", details: errors.array() });
       }
 
-      const project = await Project.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      // Vérifier que le projet appartient à l'utilisateur
+      const project = await Project.findOneAndUpdate(
+        { _id: req.params.id, userId: req.user.id },
+        req.body,
+        { new: true, runValidators: true },
+      );
 
       if (project) {
         res.json({ message: "Projet mis à jour", data: project });
@@ -150,7 +180,11 @@ router.put(
 // DELETE /api/admin/projects/:id - Supprimer un projet
 router.delete("/projects/:id", async (req, res) => {
   try {
-    const project = await Project.findByIdAndDelete(req.params.id);
+    // Vérifier que le projet appartient à l'utilisateur
+    const project = await Project.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
     if (project) {
       res.json({ message: "Projet supprimé" });
     } else {
@@ -163,10 +197,13 @@ router.delete("/projects/:id", async (req, res) => {
 });
 
 // GESTION DES COMPÉTENCES
-// GET /api/admin/skills - Récupérer toutes les compétences
+// GET /api/admin/skills - Récupérer toutes les compétences de l'utilisateur
 router.get("/skills", async (req, res) => {
   try {
-    const skills = await Skill.getByCategory();
+    const skills = await Skill.find({ userId: req.user.id }).sort({
+      categorie: 1,
+      ordre: 1,
+    });
     res.json(skills);
   } catch (error) {
     console.error("Erreur récupération compétences admin:", error);
@@ -193,7 +230,9 @@ router.post(
           .json({ error: "Données invalides", details: errors.array() });
       }
 
-      const newSkill = await Skill.create(req.body);
+      // Ajouter userId à la compétence
+      const skillData = { ...req.body, userId: req.user.id };
+      const newSkill = await Skill.create(skillData);
       res.status(201).json({ message: "Compétence créée", data: newSkill });
     } catch (error) {
       console.error("Erreur création compétence:", error);
@@ -220,10 +259,12 @@ router.put(
           .json({ error: "Données invalides", details: errors.array() });
       }
 
-      const skill = await Skill.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true,
-      });
+      // Vérifier que la compétence appartient à l'utilisateur
+      const skill = await Skill.findOneAndUpdate(
+        { _id: req.params.id, userId: req.user.id },
+        req.body,
+        { new: true, runValidators: true },
+      );
 
       if (skill) {
         res.json({ message: "Compétence mise à jour", data: skill });
@@ -240,7 +281,11 @@ router.put(
 // DELETE /api/admin/skills/:id - Supprimer une compétence
 router.delete("/skills/:id", async (req, res) => {
   try {
-    const skill = await Skill.findByIdAndDelete(req.params.id);
+    // Vérifier que la compétence appartient à l'utilisateur
+    const skill = await Skill.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
+    });
     if (skill) {
       res.json({ message: "Compétence supprimée" });
     } else {
@@ -323,5 +368,122 @@ router.post("/upload", upload.single("image"), (req, res) => {
     res.status(500).json({ error: "Erreur lors de l'upload" });
   }
 });
+
+// GESTION DU SOUS-DOMAINE
+const User = require("../models/User");
+
+// Sous-domaines réservés (ne peuvent pas être utilisés)
+const RESERVED_SUBDOMAINS = [
+  "www",
+  "api",
+  "admin",
+  "app",
+  "mail",
+  "ftp",
+  "localhost",
+  "staging",
+  "dev",
+  "test",
+  "demo",
+  "blog",
+  "shop",
+  "store",
+];
+
+// GET /api/admin/subdomain - Récupérer les infos de sous-domaine
+router.get("/subdomain", async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select(
+      "slug subdomain customDomain",
+    );
+    if (!user) {
+      return res.status(404).json({ error: "Utilisateur non trouvé" });
+    }
+    res.json({
+      slug: user.slug,
+      subdomain: user.subdomain,
+      customDomain: user.customDomain,
+    });
+  } catch (error) {
+    console.error("Erreur récupération sous-domaine:", error);
+    res.status(500).json({ error: "Erreur lors de la récupération" });
+  }
+});
+
+// PUT /api/admin/subdomain - Mettre à jour le sous-domaine
+router.put(
+  "/subdomain",
+  [
+    body("subdomain")
+      .optional()
+      .matches(/^[a-z0-9-]+$/)
+      .withMessage(
+        "Sous-domaine invalide (lettres minuscules, chiffres et tirets uniquement)",
+      )
+      .isLength({ min: 3, max: 30 })
+      .withMessage("Le sous-domaine doit contenir entre 3 et 30 caractères"),
+    body("customDomain")
+      .optional()
+      .matches(/^[a-z0-9.-]+\.[a-z]{2,}$/)
+      .withMessage("Domaine personnalisé invalide"),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ error: "Données invalides", details: errors.array() });
+      }
+
+      const { subdomain, customDomain } = req.body;
+
+      // Vérifier si le sous-domaine est réservé
+      if (subdomain && RESERVED_SUBDOMAINS.includes(subdomain.toLowerCase())) {
+        return res.status(400).json({ error: "Ce sous-domaine est réservé" });
+      }
+
+      // Vérifier si le sous-domaine est déjà utilisé
+      if (subdomain) {
+        const existingUser = await User.findOne({
+          subdomain: subdomain.toLowerCase(),
+          _id: { $ne: req.user.id },
+        });
+        if (existingUser) {
+          return res
+            .status(400)
+            .json({ error: "Ce sous-domaine est déjà utilisé" });
+        }
+      }
+
+      // Mettre à jour l'utilisateur
+      const updateData = {};
+      if (subdomain !== undefined) {
+        updateData.subdomain = subdomain.toLowerCase();
+        updateData.slug = subdomain.toLowerCase();
+      }
+      if (customDomain !== undefined) {
+        updateData.customDomain = customDomain.toLowerCase();
+      }
+
+      const user = await User.findByIdAndUpdate(req.user.id, updateData, {
+        new: true,
+        runValidators: true,
+      }).select("slug subdomain customDomain");
+
+      res.json({
+        message: "Sous-domaine mis à jour",
+        data: {
+          slug: user.slug,
+          subdomain: user.subdomain,
+          customDomain: user.customDomain,
+        },
+      });
+    } catch (error) {
+      console.error("Erreur mise à jour sous-domaine:", error);
+      res.status(500).json({ error: "Erreur lors de la mise à jour" });
+    }
+  },
+);
 
 module.exports = router;
