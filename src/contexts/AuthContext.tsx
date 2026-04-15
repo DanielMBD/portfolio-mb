@@ -1,6 +1,11 @@
-
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import ApiService, { AuthUser, RegisterData } from '@/services/api';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import ApiService, { AuthUser, RegisterData } from "@/services/api";
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -16,12 +21,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,28 +43,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setUser(result.user);
       }
     } catch (error) {
-      console.error('Auth check failed:', error);
+      console.error("Auth check failed:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const login = async (email: string, password: string) => {
-    try {
-      const { user: authUser } = await ApiService.login(email, password);
-      setUser(authUser);
-    } catch (error) {
-      throw error;
-    }
+    const { user: authUser } = await ApiService.login(email, password);
+    setUser(authUser);
   };
 
   const register = async (registerData: RegisterData) => {
-    try {
-      const { user: authUser } = await ApiService.register(registerData);
-      setUser(authUser);
-    } catch (error) {
-      throw error;
-    }
+    const { user: authUser } = await ApiService.register(registerData);
+    setUser(authUser);
   };
 
   const logout = async () => {

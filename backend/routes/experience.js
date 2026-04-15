@@ -1,18 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const Experience = require("../models/Experience");
+const User = require("../models/User");
 const { authenticateToken } = require("../middleware/auth");
 
 // Routes publiques
 // GET - Récupérer toutes les expériences actives
 router.get("/", async (req, res) => {
   try {
-    // Si userId fourni en query, filtrer par utilisateur
-    const filter = { statut: "actif" };
-    if (req.query.userId) {
-      filter.userId = req.query.userId;
+    let userId = req.query.userId;
+
+    // Si pas d'userId, utiliser l'utilisateur par défaut
+    if (!userId) {
+      const defaultUser = await User.findOne().sort({ createdAt: 1 });
+      if (defaultUser) {
+        userId = defaultUser._id;
+      }
     }
 
+    const filter = { statut: "actif", userId };
     const experiences = await Experience.find(filter)
       .sort({ ordre: 1, startDate: -1 })
       .select("-__v");

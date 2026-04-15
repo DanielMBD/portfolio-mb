@@ -59,5 +59,26 @@ export const useSkills = () => {
   });
 };
 
+export const useProject = (id: string | undefined) => {
+  return useQuery({
+    queryKey: ["project", id],
+    queryFn: async () => {
+      if (!id) throw new Error("ID du projet requis");
+      try {
+        return await apiService.getProjectById(id);
+      } catch (error) {
+        console.warn(
+          "API non disponible, utilisation des données statiques",
+          error,
+        );
+        const project = staticProjects.find((p) => p._id === id);
+        if (!project) throw new Error("Projet non trouvé");
+        return project;
+      }
+    },
+    enabled: !!id,
+  });
+};
+
 // Types exportés pour l'utilisation dans les composants
 export type { PersonalInfo, Project, Skill };

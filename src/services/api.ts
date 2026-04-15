@@ -147,6 +147,14 @@ class ApiService {
     return await response.json();
   }
 
+  async getProjectById(id: string): Promise<Project> {
+    const response = await fetch(`${API_BASE_URL}/portfolio/projects/${id}`);
+    if (!response.ok) {
+      throw new Error("Projet non trouvé");
+    }
+    return await response.json();
+  }
+
   async getSkills(): Promise<Record<string, Skill[]>> {
     const response = await fetch(`${API_BASE_URL}/portfolio/skills`);
     return await response.json();

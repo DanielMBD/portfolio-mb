@@ -122,6 +122,11 @@ userSchema.statics.findByCustomDomain = function (domain) {
   return this.findOne({ customDomain: domain.toLowerCase(), isActive: true });
 };
 
+// Méthode statique pour récupérer l'utilisateur par défaut (premier créé)
+userSchema.statics.getDefaultUser = function () {
+  return this.findOne({ isActive: true }).sort({ createdAt: 1 });
+};
+
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;

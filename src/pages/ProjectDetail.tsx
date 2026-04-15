@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Github, ExternalLink, Calendar } from "lucide-react";
-import { useProjects } from "@/hooks/usePortfolio";
+import { useProject } from "@/hooks/usePortfolio";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: projects = [], isLoading } = useProjects();
-
-  const project = projects.find((p) => p._id === id || (p as any).id === id);
+  const { data: project, isLoading, error } = useProject(id);
 
   if (isLoading) {
     return (
@@ -25,7 +23,7 @@ const ProjectDetail = () => {
     );
   }
 
-  if (!project) {
+  if (error || !project) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
