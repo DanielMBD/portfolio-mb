@@ -153,12 +153,7 @@ const Contact = () => {
                     value: staticPersonalInfo.email_contact,
                     href: `mailto:${staticPersonalInfo.email_contact}`,
                   },
-                  {
-                    icon: Mail,
-                    label: "Email 2",
-                    value: "daniel.makosso@devgroup.ga",
-                    href: `mailto:${"daniel.makosso@devgroup.ga"}`,
-                  },
+
                   {
                     icon: Phone,
                     label: "Téléphone",

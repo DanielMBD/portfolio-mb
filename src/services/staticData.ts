@@ -38,7 +38,7 @@ export const staticPersonalInfo: PersonalInfo = {
   localisation: "Libreville, Gabon",
   description_courte:
     "Développeur passionné, je conçois des applications modernes et performantes. Curieux et rigoureux, j'aime apprendre de nouvelles technologies et contribuer à des projets innovants.",
-  email_contact: "mb.daniel241@gmail.com",
+  email_contact: "daniel.makosso@devgroup.ga",
 
   github_url: "https://github.com/DanielMBD",
   linkedin_url: "https://www.linkedin.com/in/daniel-makosso",
