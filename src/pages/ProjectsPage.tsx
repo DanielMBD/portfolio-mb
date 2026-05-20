@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useProjects } from "@/hooks/usePortfolio";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { resolveMediaUrl } from "@/services/api";
+import ProjectImage from "@/components/projects/ProjectImage";
 
 const ProjectsPage = () => {
   const { data: projects = [], isLoading, error } = useProjects();
@@ -64,13 +64,10 @@ const ProjectsPage = () => {
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 <div className="relative overflow-hidden aspect-video">
-                  <img
-                    src={resolveMediaUrl(project.image_url, "/placeholder.svg")}
+                  <ProjectImage
+                    src={project.image_url}
                     alt={project.titre}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    onError={(event) => {
-                      event.currentTarget.src = "/placeholder.svg";
-                    }}
+                    imageClassName="transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent opacity-75" />
                   <div className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-white/90 px-3 py-1 font-mono text-xs font-bold text-slate-950 backdrop-blur">

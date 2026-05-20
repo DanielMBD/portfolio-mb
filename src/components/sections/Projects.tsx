@@ -3,7 +3,7 @@ import { Github, ExternalLink, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useProjects } from "@/hooks/usePortfolio";
-import { resolveMediaUrl } from "@/services/api";
+import ProjectImage from "@/components/projects/ProjectImage";
 
 const Projects = () => {
   const { data: projects = [], isLoading, error } = useProjects();
@@ -28,7 +28,7 @@ const Projects = () => {
     title: project.titre,
     description: project.description,
     longDescription: project.description, // Could be enhanced with a separate field
-    image: resolveMediaUrl(project.image_url, "/placeholder.svg"),
+    image: project.image_url,
     technologies: project.technologies,
     githubUrl: project.github_url,
     liveUrl: project.demo_url,
@@ -63,13 +63,10 @@ const Projects = () => {
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <div className="relative overflow-hidden aspect-video">
-                      <img
+                      <ProjectImage
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        onError={(event) => {
-                          event.currentTarget.src = "/placeholder.svg";
-                        }}
+                        imageClassName="transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/15 to-transparent opacity-80" />
                       <div className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-white/90 px-3 py-1 font-mono text-xs font-bold text-slate-950 backdrop-blur">

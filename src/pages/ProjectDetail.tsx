@@ -11,7 +11,7 @@ import { useProject } from "@/hooks/usePortfolio";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { resolveMediaUrl } from "@/services/api";
+import ProjectImage from "@/components/projects/ProjectImage";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -125,13 +125,9 @@ const ProjectDetail = () => {
               <div className="absolute -inset-4 rounded-[2rem] border border-white/70 bg-card/40 dark:border-white/10" />
               <div className="relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-card p-2 shadow-[0_28px_90px_-54px_rgba(15,23,42,0.85)] dark:border-white/10">
                 <div className="aspect-video overflow-hidden rounded-[1.25rem] bg-muted">
-                  <img
-                    src={resolveMediaUrl(project.image_url, "/placeholder.svg")}
+                  <ProjectImage
+                    src={project.image_url}
                     alt={project.titre}
-                    className="h-full w-full object-cover"
-                    onError={(event) => {
-                      event.currentTarget.src = "/placeholder.svg";
-                    }}
                   />
                 </div>
               </div>

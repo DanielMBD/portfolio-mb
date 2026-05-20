@@ -29,11 +29,6 @@ const Hero = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[1.12fr_0.88fr]">
             <div className="animate-fade-in space-y-8">
-              <span className="section-kicker">
-                <Sparkles className="h-3.5 w-3.5" />
-                Software developer / Portfolio
-              </span>
-
               <div className="space-y-6">
                 <h1 className="max-w-4xl text-4xl font-extrabold leading-[1.06] tracking-normal md:text-6xl lg:text-7xl">
                   {personalInfo?.nom_complet || "MAKOSSO Daniel"}
