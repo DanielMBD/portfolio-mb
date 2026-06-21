@@ -28,7 +28,7 @@ const Footer = () => {
   const stack = ["React", "TypeScript", "Node.js", "TailwindCSS", "MongoDB"];
 
   return (
-    <footer className="relative overflow-hidden border-t border-border bg-white text-card-foreground">
+    <footer className="relative overflow-hidden border-t border-border bg-background text-card-foreground">
       <div className="container mx-auto px-6">
         <div className="relative grid gap-10 py-14 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
           <div className="space-y-6">

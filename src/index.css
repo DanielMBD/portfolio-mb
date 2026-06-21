@@ -249,7 +249,7 @@
 
   .section-bg::before {
     content: "";
-    @apply absolute inset-0 bg-white;
+    @apply absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/5;
   }
 
   .fade-in-scroll {
