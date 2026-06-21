@@ -32,7 +32,7 @@ const Skills = () => {
   );
 
   return (
-    <section id="skills" className="section-shell relative bg-muted/30">
+    <section id="skills" className="section-shell relative bg-background">
       <div className="container mx-auto px-6">
         <div className="mb-12 grid gap-6 md:grid-cols-[0.8fr_1fr] md:items-end">
           <div className="space-y-4">

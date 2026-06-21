@@ -14,7 +14,7 @@ const Experience = () => {
   const collaborations = experiences.length - stages;
 
   return (
-    <section id="experience" className="section-shell bg-muted/35">
+    <section id="experience" className="section-shell bg-background">
       <div className="container mx-auto px-6">
         <div className="mb-12 grid gap-6 md:grid-cols-[0.8fr_1fr] md:items-end">
           <div className="space-y-4">

@@ -128,8 +128,6 @@ const Hero = () => {
               <div className="w-full max-w-[410px]">
                 <div className="relative">
                   <div className="absolute -inset-5 rounded-[2.4rem] border border-white/60 bg-card/40 backdrop-blur dark:border-white/10" />
-                  <div className="absolute -right-6 top-10 h-24 w-24 rounded-3xl border border-accent/20 bg-accent/15" />
-                  <div className="absolute -bottom-6 -left-6 h-28 w-28 rounded-3xl border border-secondary/20 bg-secondary/15" />
                   <div className="relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-card p-2 shadow-[0_28px_90px_-54px_rgba(15,23,42,0.85)] dark:border-white/10">
                     <div className="aspect-[5/6] overflow-hidden rounded-[1.7rem] bg-muted">
                       <img

@@ -23,7 +23,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-white/60 bg-background/80 backdrop-blur-2xl dark:border-white/10">
+    <header className="fixed top-0 z-50 w-full border-b border-white/60 bg-white/80 backdrop-blur-2xl dark:border-white/10">
       <div className="container mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-shrink-0">

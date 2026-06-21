@@ -115,7 +115,7 @@ const Contact = () => {
 
   return (
     <section id="contact" className="section-shell relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/25 to-background" />
+      <div className="absolute inset-0 bg-background" />
       <div className="container mx-auto px-6 relative z-10">
         <div className="mb-12 grid gap-6 md:grid-cols-[0.8fr_1fr] md:items-end">
           <div className="space-y-4">

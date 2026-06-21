@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: hsl(224, 30%, 8%); }
+      .text { fill: #ffffff; font-family: 'JetBrains Mono', monospace; font-weight: 900; font-size: 12px; text-anchor: middle; dominant-baseline: central; }
+    </style>
+  </defs>
+  <!-- Background with rounded corners -->
+  <rect class="bg" width="32" height="32" rx="6" ry="6"/>
+  <!-- Shadow effect -->
+  <rect fill="rgba(0,0,0,0.2)" y="22" width="32" height="10" rx="0" ry="0"/>
+  <!-- DM Text -->
+  <text class="text" x="16" y="16">DM</text>
+</svg>
