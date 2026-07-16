@@ -11,12 +11,26 @@ import {
 } from "lucide-react";
 import { usePersonalInfo } from "@/hooks/usePortfolio";
 import { resolveMediaUrl } from "@/services/api";
+import { useTheme } from "@/components/ThemeProvider";
 
 const Hero = () => {
   const { data: personalInfo } = usePersonalInfo();
+  const { theme } = useTheme();
 
   const scrollToContact = () => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Choisir l'image selon le thème
+  const getProfileImage = () => {
+    const isDarkMode = theme === 'dark';
+    
+    if (personalInfo?.photo_profil) {
+      return resolveMediaUrl(personalInfo.photo_profil, isDarkMode ? "/s.jpg" : "/5.jpg");
+    }
+    
+    // Images par défaut selon le thème
+    return isDarkMode ? "/s.jpg" : "/5.jpg";
   };
 
   return (
@@ -131,14 +145,11 @@ const Hero = () => {
                   <div className="relative overflow-hidden rounded-[2.2rem] border border-white/70 bg-card p-2 shadow-[0_28px_90px_-54px_rgba(15,23,42,0.85)] dark:border-white/10">
                     <div className="aspect-[5/6] overflow-hidden rounded-[1.7rem] bg-muted">
                       <img
-                        src={resolveMediaUrl(
-                          personalInfo?.photo_profil,
-                          "/5.jpg",
-                        )}
+                        src={getProfileImage()}
                         alt={`${personalInfo?.nom_complet || "MAKOSSO Daniel"} - Photo de profil`}
                         className="h-full w-full scale-[1.03] object-cover object-[50%_24%] saturate-[0.96] contrast-[1.03]"
                         onError={(event) => {
-                          event.currentTarget.src = "/5.jpg";
+                          event.currentTarget.src = theme === 'dark' ? "/s.jpg" : "/5.jpg";
                         }}
                       />
                     </div>
