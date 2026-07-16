@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Generator DM</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            background: #f5f5f5;
+        }
+        
+        .favicon-preview {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .logo-16, .logo-32, .logo-48 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: hsl(224, 30%, 8%); /* --primary */
+            color: hsl(0, 0%, 100%); /* --primary-foreground */
+            font-weight: 900;
+            border-radius: 6px;
+            box-shadow: 0 16px 28px -18px rgba(15, 23, 42, 0.78);
+        }
+        
+        .logo-16 {
+            width: 16px;
+            height: 16px;
+            font-size: 8px;
+            border-radius: 3px;
+        }
+        
+        .logo-32 {
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+            border-radius: 6px;
+        }
+        
+        .logo-48 {
+            width: 48px;
+            height: 48px;
+            font-size: 24px;
+            border-radius: 8px;
+        }
+        
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Favicon Generator - DM Logo</h1>
+    
+    <div class="favicon-preview">
+        <div>
+            <p>16x16:</p>
+            <div class="logo-16">DM</div>
+        </div>
+        <div>
+            <p>32x32:</p>
+            <div class="logo-32">DM</div>
+        </div>
+        <div>
+            <p>48x48:</p>
+            <div class="logo-48">DM</div>
+        </div>
+    </div>
+    
+    <canvas id="favicon16" width="16" height="16"></canvas>
+    <canvas id="favicon32" width="32" height="32"></canvas>
+    <canvas id="favicon48" width="48" height="48"></canvas>
+    
+    <script>
+        function drawFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            ctx.fillStyle = 'hsl(224, 30%, 8%)'; // --primary color
+            const borderRadius = Math.max(2, size * 0.125); // Proportional border radius
+            
+            // Draw rounded rectangle
+            ctx.beginPath();
+            ctx.roundRect(0, 0, size, size, borderRadius);
+            ctx.fill();
+            
+            // Add shadow effect (darker bottom)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.beginPath();
+            ctx.roundRect(0, size * 0.7, size, size * 0.3, [0, 0, borderRadius, borderRadius]);
+            ctx.fill();
+            
+            // Text
+            ctx.fillStyle = '#ffffff'; // white text
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.font = `900 ${size * 0.4}px 'JetBrains Mono', monospace`;
+            ctx.fillText('DM', size / 2, size / 2);
+        }
+        
+        // Draw favicons
+        drawFavicon(document.getElementById('favicon16'), 16);
+        drawFavicon(document.getElementById('favicon32'), 32);
+        drawFavicon(document.getElementById('favicon48'), 48);
+        
+        // Function to download canvas as PNG
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Add download buttons
+        const downloadSection = document.createElement('div');
+        downloadSection.innerHTML = `
+            <h3>Download Favicons:</h3>
+            <button onclick="downloadCanvas(document.getElementById('favicon16'), 'favicon-16.png')">Download 16x16</button>
+            <button onclick="downloadCanvas(document.getElementById('favicon32'), 'favicon-32.png')">Download 32x32</button>
+            <button onclick="downloadCanvas(document.getElementById('favicon48'), 'favicon-48.png')">Download 48x48</button>
+        `;
+        document.body.appendChild(downloadSection);
+    </script>
+</body>
+</html>

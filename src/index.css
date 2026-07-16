@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 42 28% 97%;
+    --background: 0 0% 100%;
     --foreground: 224 30% 8%;
 
     --card: 0 0% 100%;
@@ -53,15 +53,15 @@
     --gradient-hero:
       radial-gradient(
         circle at 18% 18%,
-        hsl(214 82% 46% / 0.13),
+        hsl(0 0% 100% / 0),
         transparent 28%
       ),
       radial-gradient(
         circle at 86% 12%,
-        hsl(18 86% 55% / 0.12),
+        hsl(0 0% 100% / 0),
         transparent 24%
       ),
-      linear-gradient(180deg, hsl(42 28% 98%) 0%, hsl(42 28% 95%) 100%);
+      linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 100%) 100%);
 
     --shadow-glass: 0 1px 0 rgba(15, 23, 42, 0.04);
     --shadow-card: 0 18px 42px -30px rgba(15, 23, 42, 0.48);
@@ -162,12 +162,10 @@
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background:
-      linear-gradient(hsl(var(--border) / 0.18) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.18) 1px, transparent 1px);
+    background: transparent;
     background-size: 56px 56px;
     mask-image: linear-gradient(to bottom, black, transparent 32%);
-    opacity: 0.7;
+    opacity: 0;
   }
 
   h1,
