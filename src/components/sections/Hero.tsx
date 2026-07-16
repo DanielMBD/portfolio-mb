@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   ArrowDown,
   Download,
@@ -16,6 +17,32 @@ import { useTheme } from "@/components/ThemeProvider";
 const Hero = () => {
   const { data: personalInfo } = usePersonalInfo();
   const { theme } = useTheme();
+  const [actualTheme, setActualTheme] = useState<'light' | 'dark'>('light');
+
+  // Effet pour déterminer le thème réel et réagir aux changements
+  useEffect(() => {
+    const updateTheme = () => {
+      if (theme === 'system') {
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        setActualTheme(systemTheme);
+      } else {
+        setActualTheme(theme);
+      }
+    };
+
+    updateTheme();
+
+    // Écouter les changements de thème système
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => {
+      if (theme === 'system') {
+        updateTheme();
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [theme]);
 
   const scrollToContact = () => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
@@ -23,10 +50,10 @@ const Hero = () => {
 
   // Choisir l'image selon le thème
   const getProfileImage = () => {
-    const isDarkMode = theme === 'dark';
+    const isDarkMode = actualTheme === 'dark';
     
     if (personalInfo?.photo_profil) {
-      return resolveMediaUrl(personalInfo.photo_profil, isDarkMode ? "/s.jpg" : "/5.jpg");
+      return resolveMediaUrl(personalInfo.photo_profil, isDarkMode ? "/10.jpg" : "/5.jpg");
     }
     
     // Images par défaut selon le thème
@@ -149,7 +176,7 @@ const Hero = () => {
                         alt={`${personalInfo?.nom_complet || "MAKOSSO Daniel"} - Photo de profil`}
                         className="h-full w-full scale-[1.03] object-cover object-[50%_24%] saturate-[0.96] contrast-[1.03]"
                         onError={(event) => {
-                          event.currentTarget.src = theme === 'dark' ? "/s.jpg" : "/5.jpg";
+                          event.currentTarget.src = actualTheme === 'dark' ? "/10.jpg" : "/5.jpg";
                         }}
                       />
                     </div>
