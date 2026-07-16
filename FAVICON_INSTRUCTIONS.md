@@ -8,8 +8,7 @@ Le favicon SVG moderne est déjà configuré dans `index.html` avec le style DM 
 - Bordures arrondies
 - Effet d'ombre
 
-## Pour créer un favicon.ico traditionnel
-
+## Pour créer un favicon.ico traditionn
 ### Option 1 : Générateur en ligne (Recommandé)
 1. Ouvrez https://favicon.io/favicon-generator/
 2. Configurez avec ces paramètres :
