@@ -30,7 +30,7 @@ const Hero = () => {
     }
     
     // Images par défaut selon le thème
-    return isDarkMode ? "/s.jpg" : "/5.jpg";
+    return isDarkMode ? "/10.jpg" : "/5.jpg";
   };
 
   return (
